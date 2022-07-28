@@ -7,10 +7,10 @@ import Variables from "./components/Variables";
 function App() {
   return (
     <div className="page">
-      <Saves />
-      <Variables />
+      {/* <Saves /> */}
+      {/* <Variables /> */}
       <Calculator />
-      <Formulas />
+      {/* <Formulas /> */}
     </div>
   );
 }
