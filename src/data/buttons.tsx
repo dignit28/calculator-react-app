@@ -48,7 +48,7 @@ const buttons: CalculatorButton[] = [
   },
   {
     text: "EVALUATE",
-    value: null,
+    value: "evaluate",
   },
 ];
 
