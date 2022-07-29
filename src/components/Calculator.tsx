@@ -1,6 +1,8 @@
 import React from "react";
 // Styles
 import { CalculatorWrapper } from "./Calculator.styles";
+// Functions
+import validateExpression from "../math_utility/validateExpression";
 // Data
 import buttons from "../data/buttons";
 
@@ -9,6 +11,9 @@ const Calculator = () => {
     displayedValue: "",
     arrayValue: ["caret"],
   });
+
+  const inputField: HTMLInputElement | null =
+    document.querySelector(".calculator-input");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setExpression((prevExpression) => {
@@ -33,7 +38,11 @@ const Calculator = () => {
   const handleButtonClick = (value: string): void => {
     switch (value) {
       case "evaluate": // Process evaluation
-        console.log("pressed eval button");
+        if (inputField !== null) {
+          console.log(validateExpression(inputField.value));
+        } else {
+          console.log("Cannot find input field");
+        }
         break;
       default: // Add input
         setExpression((prevExpression) => {
