@@ -10,13 +10,11 @@ const Calculator = () => {
     arrayValue: ["caret"],
   });
 
-  const inputElement = document.querySelector(".calculator-input");
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setExpression((prevExpression) => {
       if (typeof event.target.selectionStart === "number") {
         const newDisplayedValue = event.target.value.replace(
-          /[^0-9a-z\+\-\*/\^\.\)\(]+/gi,
+          /[^0-9a-z+\-*/^.)(]+/gi,
           ""
         );
         const newArrayValue = newDisplayedValue.split("");
@@ -32,9 +30,7 @@ const Calculator = () => {
     });
   };
 
-  const handleButtonClick = (
-    value: string
-  ): void => {
+  const handleButtonClick = (value: string): void => {
     switch (value) {
       case "evaluate": // Process evaluation
         console.log("pressed eval button");
@@ -82,7 +78,7 @@ const Calculator = () => {
   };
 
   const buttonElements = buttons.map((button) => (
-    <button onClick={() => handleButtonClick(button.value)}>
+    <button key={button.id} onClick={() => handleButtonClick(button.value)}>
       {button.text}
     </button>
   ));
