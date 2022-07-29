@@ -1,4 +1,4 @@
-export enum expressionTokenType {
+export enum ExpressionTokenType {
   BEGINNING = "beginning",
   OPERATOR = "operator",
   NUMBER = "number",

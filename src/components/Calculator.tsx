@@ -18,11 +18,11 @@ const Calculator = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setExpression((prevExpression) => {
       if (typeof event.target.selectionStart === "number") {
-        const newDisplayedValue = event.target.value.replace(
+        const newDisplayedValue: string = event.target.value.replace(
           /[^0-9a-z+\-*/^.)(]+/gi,
           ""
         );
-        const newArrayValue = newDisplayedValue.split("");
+        const newArrayValue: string[] = newDisplayedValue.split("");
         newArrayValue.splice(event.target.selectionStart, 0, "caret");
         return {
           arrayValue: newArrayValue,
@@ -46,15 +46,15 @@ const Calculator = () => {
         break;
       default: // Add input
         setExpression((prevExpression) => {
-          const newArrayValue = [...prevExpression.arrayValue];
+          const newArrayValue: string[] = [...prevExpression.arrayValue];
           console.log("here");
           newArrayValue.splice(
             prevExpression.arrayValue.indexOf("caret"),
             0,
             value
           );
-          const newDisplayedValue = newArrayValue
-            .filter((element) => element !== "caret")
+          const newDisplayedValue: string = newArrayValue
+            .filter((element: string) => element !== "caret")
             .join("");
           return {
             arrayValue: newArrayValue,
@@ -71,8 +71,8 @@ const Calculator = () => {
     const target = event.target as HTMLInputElement;
     setExpression((prevExpression) => {
       if (typeof target.selectionStart === "number") {
-        const newArrayValue = prevExpression.arrayValue.filter(
-          (element) => element !== "caret"
+        const newArrayValue: string[] = prevExpression.arrayValue.filter(
+          (element: string) => element !== "caret"
         );
         newArrayValue.splice(target.selectionStart, 0, "caret");
         return {
