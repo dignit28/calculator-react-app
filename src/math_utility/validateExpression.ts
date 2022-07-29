@@ -29,7 +29,7 @@ function validateExpression(expression: string): boolean {
             prevToken.tokenType !== ExpressionTokenType.NUMBER &&
             prevToken.tokenType !== ExpressionTokenType.RIGHT_PARENTHESIS
           ) {
-            throw "Binary operator must be after a number or a right parenthesis";
+            throw new Error("Binary operator must be after a number or a right parenthesis");
           }
           prevToken.tokenType = ExpressionTokenType.OPERATOR;
           prevToken.decimalPointUsed = false;
@@ -40,7 +40,9 @@ function validateExpression(expression: string): boolean {
             prevToken.tokenType === ExpressionTokenType.DECIMAL_POINT ||
             prevToken.tokenType === ExpressionTokenType.RIGHT_PARENTHESIS
           ) {
-            throw "Left parenthesis can't be after by number, decimal point of right parenthesis";
+            throw new Error(
+              "Left parenthesis can't be after by number, decimal point of right parenthesis"
+            );
           }
           openingParenthesis++;
           prevToken.tokenType = ExpressionTokenType.LEFT_PARENTHESIS;
@@ -48,9 +50,9 @@ function validateExpression(expression: string): boolean {
           break;
         case ")":
           if (openingParenthesis <= 0) {
-            throw "Detected non matching parenthesis";
+            throw new Error("Detected non matching parenthesis");
           } else if (prevToken.tokenType !== ExpressionTokenType.NUMBER) {
-            throw "Right parenthesis must be after a number";
+            throw new Error("Right parenthesis must be after a number");
           }
           openingParenthesis--;
           prevToken.tokenType = ExpressionTokenType.RIGHT_PARENTHESIS;
@@ -58,9 +60,9 @@ function validateExpression(expression: string): boolean {
           break;
         case ".":
           if (prevToken.decimalPointUsed === true) {
-            throw "Detected multiple decimal points in a number";
+            throw new Error("Detected multiple decimal points in a number");
           } else if (prevToken.tokenType !== ExpressionTokenType.NUMBER) {
-            throw "Decimal point must be between numbers";
+            throw new Error("Decimal point must be between numbers");
           }
           prevToken.tokenType = ExpressionTokenType.DECIMAL_POINT;
           prevToken.decimalPointUsed = true;
@@ -76,20 +78,22 @@ function validateExpression(expression: string): boolean {
         case "8":
         case "9":
           if (prevToken.tokenType === ExpressionTokenType.RIGHT_PARENTHESIS) {
-            throw "Number can't be after right parenthesis";
+            throw new Error("Number can't be after right parenthesis");
           }
           prevToken.tokenType = ExpressionTokenType.NUMBER;
           break;
       }
     });
     if (openingParenthesis !== 0) {
-      throw "Detected non matching parenthesis";
+      throw new Error("Detected non matching parenthesis");
     }
     if (
       prevToken.tokenType !== ExpressionTokenType.RIGHT_PARENTHESIS &&
       prevToken.tokenType !== ExpressionTokenType.NUMBER
     ) {
-      throw "expression must end with a right parenthesis or a number";
+      throw new Error(
+        "expression must end with a right parenthesis or a number"
+      );
     }
   } catch (errorMessage) {
     console.log(errorMessage);
