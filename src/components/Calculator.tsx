@@ -5,18 +5,20 @@ import { CalculatorWrapper } from "./Calculator.styles";
 import validateExpression from "../math_utility/validateExpression";
 // Data
 import buttons from "../data/buttons";
+// Types
+import { ExpressionState } from "../App";
 
-const Calculator = () => {
-  const [expression, setExpression] = React.useState({
-    displayedValue: "",
-    arrayValue: ["caret"],
-  });
+type CalculatorProps = {
+  expression: ExpressionState;
+  setExpression: React.Dispatch<React.SetStateAction<ExpressionState>>;
+};
 
+const Calculator: React.FC<CalculatorProps> = (props) => {
   const inputField: HTMLInputElement | null =
     document.querySelector(".calculator-input");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setExpression((prevExpression) => {
+    props.setExpression((prevExpression) => {
       if (typeof event.target.selectionStart === "number") {
         const newDisplayedValue: string = event.target.value.replace(
           /[^0-9a-z+\-*/^.)(]+/gi,
@@ -45,7 +47,7 @@ const Calculator = () => {
         }
         break;
       default: // Add input
-        setExpression((prevExpression) => {
+        props.setExpression((prevExpression) => {
           const newArrayValue: string[] = [...prevExpression.arrayValue];
           console.log("here");
           newArrayValue.splice(
@@ -69,7 +71,7 @@ const Calculator = () => {
     event: React.SyntheticEvent<HTMLInputElement>
   ): void => {
     const target = event.target as HTMLInputElement;
-    setExpression((prevExpression) => {
+    props.setExpression((prevExpression) => {
       if (typeof target.selectionStart === "number") {
         const newArrayValue: string[] = prevExpression.arrayValue.filter(
           (element: string) => element !== "caret"
@@ -99,7 +101,7 @@ const Calculator = () => {
         className="calculator-input"
         onChange={handleChange}
         onClick={handleInputClick}
-        value={expression.displayedValue}
+        value={props.expression.displayedValue}
       />
       {buttonElements}
     </CalculatorWrapper>
