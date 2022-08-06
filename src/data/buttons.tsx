@@ -55,6 +55,36 @@ const buttons: CalculatorButton[] = [
   },
   {
     id: uuidv4(),
+    text: "+",
+    value: "+",
+  },
+  {
+    id: uuidv4(),
+    text: "-",
+    value: "-",
+  },
+  {
+    id: uuidv4(),
+    text: "*",
+    value: "*",
+  },
+  {
+    id: uuidv4(),
+    text: "/",
+    value: "/",
+  },
+  {
+    id: uuidv4(),
+    text: "(",
+    value: "(",
+  },
+  {
+    id: uuidv4(),
+    text: ")",
+    value: ")",
+  },
+  {
+    id: uuidv4(),
     text: ["x", <sup key="button-exponent-text-id">y</sup>],
     value: "^",
   },

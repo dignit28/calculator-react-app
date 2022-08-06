@@ -49,7 +49,6 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
       default: // Add input
         props.setExpression((prevExpression) => {
           const newArrayValue: string[] = [...prevExpression.arrayValue];
-          console.log("here");
           newArrayValue.splice(
             prevExpression.arrayValue.indexOf("caret"),
             0,
