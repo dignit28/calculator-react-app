@@ -1,7 +1,7 @@
 import { operators } from "../data/operators";
 import { negativeExponent } from "./negativeExponent";
 
-export function convertToRPN(stringToProcess: string) {
+function convertToRPN(stringToProcess: string) {
   let tokens = stringToProcess.split(
     /(?<=\d)(?=[^0-9.])|(?<=[^0-9.])(?=\d)|(?<=\D)(?=\D)/g
   );
@@ -37,10 +37,10 @@ export function convertToRPN(stringToProcess: string) {
       while (
         operatorsStack.length !== 0 &&
         operatorsStack[operatorsStack.length - 1] !== "(" &&
-        ((operators[token].associativity == "left" &&
+        ((operators[token].associativity === "left" &&
           operators[token].precedence! <=
             operators[operatorsStack[operatorsStack.length - 1]].precedence!) ||
-          (operators[token].associativity == "right" &&
+          (operators[token].associativity === "right" &&
             operators[token].precedence! <
               operators[operatorsStack[operatorsStack.length - 1]].precedence!))
       ) {
@@ -68,7 +68,8 @@ export function convertToRPN(stringToProcess: string) {
   return tokensInRPN;
 }
 
-export function calculateRPN(expressionArray: (string | number)[]) {
+export function calculateRPN(expression: string) {
+  let expressionArray: (string | number)[] = convertToRPN(expression);
   let calculationStack: (number | string)[] = [];
   expressionArray.forEach((token) => {
     if (typeof token === "number") {

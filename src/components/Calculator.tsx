@@ -3,6 +3,7 @@ import React from "react";
 import { CalculatorWrapper } from "./Calculator.styles";
 // Functions
 import validateExpression from "../math_utility/validateExpression";
+import { calculateRPN } from "../math_utility/evaluationRPN";
 // Data
 import buttons from "../data/buttons";
 // Types
@@ -41,7 +42,9 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
     switch (value) {
       case "evaluate": // Process evaluation
         if (inputField !== null) {
-          console.log(validateExpression(inputField.value));
+          if (validateExpression(inputField.value)) {
+            console.log(calculateRPN(inputField.value));
+          }
         } else {
           console.log("Cannot find input field");
         }
