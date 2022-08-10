@@ -1,27 +1,19 @@
 import React from "react";
-import { MathJax, MathJaxContext } from "better-react-mathjax";
-// Types
-import { ExpressionState } from "../App";
-
-const config = {
-  loader: { load: ["input/asciimath"] },
-  asciimath: {
-    displaystyle: true,
-    delimiters: [
-      ["$", "$"],
-      ["`", "`"]
-    ]
-  }
-};
+import { MathJax } from "better-react-mathjax";
 
 type FormulasProps = {
-  expression: ExpressionState;
+  formula: string;
+  result: string;
 };
 
-const Formulas: React.FC<FormulasProps> = (props) => (
-  <MathJaxContext config={config}>
-    <MathJax inline dynamic>{`$${props.expression.displayedValue}$`}</MathJax>
-  </MathJaxContext>
+const Formulas: React.FC<FormulasProps> = React.memo((props) =>
+  props.result === "Invalid input" ? (
+    <span>Invalid input</span>
+  ) : (
+    <div>
+      <MathJax inline dynamic>{`$${props.formula}${props.result}$`}</MathJax>
+    </div>
+  )
 );
 
 export default Formulas;

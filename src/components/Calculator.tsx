@@ -7,11 +7,12 @@ import { calculateRPN } from "../math_utility/evaluationRPN";
 // Data
 import buttons from "../data/buttons";
 // Types
-import { ExpressionState } from "../App";
+import { ExpressionState, FormulaState } from "../App";
 
 type CalculatorProps = {
   expression: ExpressionState;
   setExpression: React.Dispatch<React.SetStateAction<ExpressionState>>;
+  setFormula: React.Dispatch<React.SetStateAction<FormulaState>>;
 };
 
 const Calculator: React.FC<CalculatorProps> = (props) => {
@@ -42,8 +43,22 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
     switch (value) {
       case "evaluate": // Process evaluation
         if (inputField !== null) {
-          if (validateExpression(inputField.value)) {
-            console.log(calculateRPN(inputField.value));
+          const expressionToCalculate = inputField.value;
+          if (validateExpression(expressionToCalculate)) {
+            const finalResult = calculateRPN(expressionToCalculate);
+            props.setFormula({
+              displayedFormula: expressionToCalculate + "=",
+              result: Number.isNaN(finalResult)
+                ? "Invalid input"
+                : finalResult.toString(),
+            });
+          } else {
+            props.setFormula((prevFormula) => {
+              return {
+                ...prevFormula,
+                result: "Invalid input",
+              };
+            });
           }
         } else {
           console.log("Cannot find input field");
