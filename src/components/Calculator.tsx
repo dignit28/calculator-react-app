@@ -35,26 +35,22 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
   const handleButtonClick = (value: string): void => {
     switch (value) {
       case "evaluate": // Process evaluation
-        if (inputField !== null) {
-          const expressionToCalculate = inputField.value;
-          if (validateExpression(expressionToCalculate)) {
-            const finalResult = calculateRPN(expressionToCalculate);
-            props.setFormula({
-              displayedFormula: expressionToCalculate + "=",
-              result: Number.isNaN(finalResult)
-                ? "Invalid input"
-                : finalResult.toString(),
-            });
-          } else {
-            props.setFormula((prevFormula) => {
-              return {
-                ...prevFormula,
-                result: "Invalid input",
-              };
-            });
-          }
+        const expressionToCalculate = inputField!.value;
+        if (validateExpression(expressionToCalculate)) {
+          const finalResult = calculateRPN(expressionToCalculate);
+          props.setFormula({
+            displayedFormula: expressionToCalculate + "=",
+            result: Number.isNaN(finalResult)
+              ? "Invalid input"
+              : finalResult.toString(),
+          });
         } else {
-          console.log("Cannot find input field");
+          props.setFormula((prevFormula) => {
+            return {
+              ...prevFormula,
+              result: "Invalid input",
+            };
+          });
         }
         break;
       default: // Add input

@@ -27,9 +27,12 @@ function validateExpression(expression: string): boolean {
         case "^":
           if (
             prevToken.tokenType !== ExpressionTokenType.NUMBER &&
-            prevToken.tokenType !== ExpressionTokenType.RIGHT_PARENTHESIS
+            prevToken.tokenType !== ExpressionTokenType.RIGHT_PARENTHESIS &&
+            prevToken.tokenType !== ExpressionTokenType.VARIABLE
           ) {
-            throw new Error("Binary operator must be after a number or a right parenthesis");
+            throw new Error(
+              "Binary operator must be after a number, variable or a right parenthesis"
+            );
           }
           prevToken.tokenType = ExpressionTokenType.OPERATOR;
           prevToken.decimalPointUsed = false;
@@ -38,10 +41,11 @@ function validateExpression(expression: string): boolean {
           if (
             prevToken.tokenType === ExpressionTokenType.NUMBER ||
             prevToken.tokenType === ExpressionTokenType.DECIMAL_POINT ||
-            prevToken.tokenType === ExpressionTokenType.RIGHT_PARENTHESIS
+            prevToken.tokenType === ExpressionTokenType.RIGHT_PARENTHESIS ||
+            prevToken.tokenType === ExpressionTokenType.VARIABLE
           ) {
             throw new Error(
-              "Left parenthesis can't be after by number, decimal point of right parenthesis"
+              "Left parenthesis can't be after a number, variable, decimal point of right parenthesis"
             );
           }
           openingParenthesis++;
@@ -51,8 +55,13 @@ function validateExpression(expression: string): boolean {
         case ")":
           if (openingParenthesis <= 0) {
             throw new Error("Detected non matching parenthesis");
-          } else if (prevToken.tokenType !== ExpressionTokenType.NUMBER) {
-            throw new Error("Right parenthesis must be after a number");
+          } else if (
+            prevToken.tokenType !== ExpressionTokenType.NUMBER &&
+            prevToken.tokenType !== ExpressionTokenType.VARIABLE
+          ) {
+            throw new Error(
+              "Right parenthesis must be after a number or a variable"
+            );
           }
           openingParenthesis--;
           prevToken.tokenType = ExpressionTokenType.RIGHT_PARENTHESIS;
@@ -77,10 +86,28 @@ function validateExpression(expression: string): boolean {
         case "7":
         case "8":
         case "9":
-          if (prevToken.tokenType === ExpressionTokenType.RIGHT_PARENTHESIS) {
-            throw new Error("Number can't be after right parenthesis");
+          if (
+            prevToken.tokenType === ExpressionTokenType.RIGHT_PARENTHESIS ||
+            prevToken.tokenType === ExpressionTokenType.VARIABLE
+          ) {
+            throw new Error(
+              "Number can't be after right parenthesis or variable"
+            );
           }
           prevToken.tokenType = ExpressionTokenType.NUMBER;
+          break;
+        default:
+          if (
+            prevToken.tokenType === ExpressionTokenType.RIGHT_PARENTHESIS ||
+            prevToken.tokenType === ExpressionTokenType.VARIABLE ||
+            prevToken.tokenType === ExpressionTokenType.DECIMAL_POINT ||
+            prevToken.tokenType === ExpressionTokenType.NUMBER
+          ) {
+            throw new Error(
+              "Variable can't be after right parenthesis, variable, number or decimal point"
+            );
+          }
+          prevToken.tokenType = ExpressionTokenType.VARIABLE;
           break;
       }
     });
@@ -89,10 +116,11 @@ function validateExpression(expression: string): boolean {
     }
     if (
       prevToken.tokenType !== ExpressionTokenType.RIGHT_PARENTHESIS &&
-      prevToken.tokenType !== ExpressionTokenType.NUMBER
+      prevToken.tokenType !== ExpressionTokenType.NUMBER &&
+      prevToken.tokenType !== ExpressionTokenType.VARIABLE
     ) {
       throw new Error(
-        "expression must end with a right parenthesis or a number"
+        "expression must end with a right parenthesis, variable or a number"
       );
     }
   } catch (errorMessage) {

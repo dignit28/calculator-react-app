@@ -5,4 +5,5 @@ export enum ExpressionTokenType {
   LEFT_PARENTHESIS = "leftParenthesis",
   RIGHT_PARENTHESIS = "rightParenthesis",
   DECIMAL_POINT = "decimalPoint",
+  VARIABLE = "variable",
 }
