@@ -28,8 +28,8 @@ export type FormulaState = {
 };
 
 function App() {
-  const [expression, setExpression] = React.useState<ExpressionState>(saveData[0][1].inputData);
-  const [formula, setFormula] = React.useState<FormulaState>(saveData[0][1].formulaData);
+  const [expression, setExpression] = React.useState<ExpressionState>(saveData[0][0][1].inputData);
+  const [formula, setFormula] = React.useState<FormulaState>(saveData[0][0][1].formulaData);
   
   return (
     <MathJaxContext config={config}>

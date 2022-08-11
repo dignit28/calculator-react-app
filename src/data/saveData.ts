@@ -12,24 +12,42 @@ interface VariableData {
   };
 }
 
-type SaveData = [string, VariableData][];
+type SaveData = [string, VariableData][][];
 
 const saveData: SaveData = [
   [
-    "x",
-    {
-      variableName: "x",
-      variableComment: "Variable x",
-      variableChildren: [],
-      inputData: {
-        displayedValue: "",
-        arrayValue: ["caret"],
+    [
+      "x",
+      {
+        variableName: "x",
+        variableComment: "Variable x",
+        variableChildren: [],
+        inputData: {
+          displayedValue: "",
+          arrayValue: ["caret"],
+        },
+        formulaData: {
+          displayedFormula: "",
+          result: "",
+        },
       },
-      formulaData: {
-        displayedFormula: "",
-        result: "",
+    ],
+    [
+      "y",
+      {
+        variableName: "y",
+        variableComment: "Variable y",
+        variableChildren: [],
+        inputData: {
+          displayedValue: "",
+          arrayValue: ["caret"],
+        },
+        formulaData: {
+          displayedFormula: "",
+          result: "",
+        },
       },
-    },
+    ],
   ],
 ];
 
