@@ -20,22 +20,15 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
     document.querySelector(".calculator-input");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    props.setExpression((prevExpression) => {
-      if (typeof event.target.selectionStart === "number") {
-        const newDisplayedValue: string = event.target.value.replace(
-          /[^0-9a-z+\-*/^.)(]+/gi,
-          ""
-        );
-        const newArrayValue: string[] = newDisplayedValue.split("");
-        newArrayValue.splice(event.target.selectionStart, 0, "caret");
-        return {
-          arrayValue: newArrayValue,
-          displayedValue: newDisplayedValue,
-        };
-      } else {
-        console.log("Input field was not selected while changing it");
-        return prevExpression;
-      }
+    const newDisplayedValue: string = event.target.value.replace(
+      /[^0-9a-z+\-*/^.)(]+/gi,
+      ""
+    );
+    const newArrayValue: string[] = newDisplayedValue.split("");
+    newArrayValue.splice(event.target.selectionStart!, 0, "caret");
+    props.setExpression({
+      arrayValue: newArrayValue,
+      displayedValue: newDisplayedValue,
     });
   };
 

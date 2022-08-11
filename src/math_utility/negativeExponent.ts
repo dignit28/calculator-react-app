@@ -102,7 +102,6 @@ function rationalizeFloat(targetFloat: number) {
     }
   } catch (error) {
     console.log("Rationalization impractical. " + error);
-    // @ts-ignore calculation error, branch value is not needed anymore
     currentBranchValue = [NaN, NaN];
   }
   return currentBranchValue;

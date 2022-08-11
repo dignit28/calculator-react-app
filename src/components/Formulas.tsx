@@ -5,7 +5,12 @@ type FormulasProps = {
   formula: string;
   result: string;
 };
-
+/////////////// FIX //////////////////
+/*
+"+-" Rendering
+Infinity | -Infinity rendering
+*/
+///////////// FIX END ////////////////
 const Formulas: React.FC<FormulasProps> = React.memo((props) =>
   props.result === "Invalid input" ? (
     <span>Invalid input</span>
