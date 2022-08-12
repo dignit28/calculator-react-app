@@ -1,7 +1,97 @@
 // Enums
 import { ExpressionTokenType } from "../utility/enums";
+// Data
+import { BANNED_VARIABLE_NAMES } from "../data/bannedVariableNames";
+import { saveData } from "../data/saveData";
+// Functions
+import { updateVariableChildren } from "../data/saveData";
 
-function validateExpression(expression: string): boolean {
+export function validateVariables(
+  parentVariable: string,
+  expression: string
+): boolean {
+  const arrayedExpression: string[] = expression.split("");
+  const variablesInExpression = Array.from(
+    new Set(
+      arrayedExpression.filter((token) => {
+        return token.match(/^[a-z]$/i);
+      })
+    )
+  );
+
+  const currentChildren = saveData[0][parentVariable].variableChildren;
+  function cancelChildrenChange() {
+    saveData[0][parentVariable].variableChildren = currentChildren;
+  }
+
+  updateVariableChildren(parentVariable, expression);
+
+  const HAS_ITSELF_IN_EXPRESSION =
+    variablesInExpression.includes(parentVariable);
+
+  if (HAS_ITSELF_IN_EXPRESSION) {
+    console.log("Variable can't use itself in expression");
+    cancelChildrenChange();
+    return false;
+  }
+
+  const HAS_BANNED_VARIABLES = variablesInExpression.some((variable) => {
+    return BANNED_VARIABLE_NAMES.includes(variable);
+  });
+
+  if (HAS_BANNED_VARIABLES) {
+    console.log("Bad variable name");
+    cancelChildrenChange();
+    return false;
+  }
+
+  const currentSaveVariables = Object.keys(saveData[0]);
+
+  const HAS_UNKNOWN_VARIABLES = variablesInExpression.some((variable) => {
+    return !currentSaveVariables.includes(variable);
+  });
+
+  if (HAS_UNKNOWN_VARIABLES) {
+    console.log("Unknown variable name");
+    cancelChildrenChange();
+    return false;
+  }
+
+  function checkChildrenVariables(
+    variableToCheck: string,
+    childrenArray: string[]
+  ): boolean {
+    if (childrenArray.length === 0) {
+      return true;
+    } else {
+      if (childrenArray.includes(variableToCheck)) return false;
+      return childrenArray.reduce((acc: boolean, childVariable: string) => {
+        return (
+          acc &&
+          checkChildrenVariables(
+            variableToCheck,
+            saveData[0][childVariable].variableChildren
+          )
+        );
+      }, true);
+    }
+  }
+
+  const NO_VARIABLE_RECURSION = checkChildrenVariables(
+    parentVariable,
+    saveData[0][parentVariable].variableChildren
+  );
+
+  if (!NO_VARIABLE_RECURSION) {
+    console.log("Some variable in expression references current variable");
+    cancelChildrenChange();
+    return false;
+  }
+
+  return true;
+}
+
+export function validateExpression(expression: string): boolean {
   const arrayedExpression: string[] = expression.split("");
   let openingParenthesis: number = 0;
 
@@ -129,5 +219,3 @@ function validateExpression(expression: string): boolean {
   }
   return true;
 }
-
-export default validateExpression;

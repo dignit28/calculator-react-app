@@ -56,3 +56,21 @@ export const updateSaveData = (
   };
   saveData[save][variable].formulaData = newFormulaData;
 };
+
+export const updateVariableChildren = (
+  parentVariable: string,
+  expression: string
+) => {
+  const arrayedExpression: string[] = expression.split("");
+  const variablesInExpression = Array.from(
+    new Set(
+      arrayedExpression.filter((token) => {
+        return token.match(/^[a-z]$/i);
+      })
+    )
+  );
+
+  console.log(variablesInExpression);
+
+  saveData[0][parentVariable].variableChildren = variablesInExpression;
+};

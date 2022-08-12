@@ -2,7 +2,10 @@ import React from "react";
 // Styles
 import { CalculatorWrapper } from "./Calculator.styles";
 // Functions
-import validateExpression from "../../math_utility/validateExpression";
+import {
+  validateExpression,
+  validateVariables,
+} from "../../math_utility/validateExpression";
 import { calculateRPN } from "../../math_utility/evaluationRPN";
 // Data
 import buttons from "../../data/buttons";
@@ -13,6 +16,7 @@ type CalculatorProps = {
   expression: ExpressionState;
   setExpression: React.Dispatch<React.SetStateAction<ExpressionState>>;
   setFormula: React.Dispatch<React.SetStateAction<FormulaState>>;
+  currentVariable: string;
 };
 
 const Calculator: React.FC<CalculatorProps> = (props) => {
@@ -36,7 +40,10 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
     switch (value) {
       case "evaluate": // Process evaluation
         const expressionToCalculate = inputField!.value;
-        if (validateExpression(expressionToCalculate)) {
+        if (
+          validateExpression(expressionToCalculate) &&
+          validateVariables(props.currentVariable, expressionToCalculate)
+        ) {
           const finalResult = calculateRPN(expressionToCalculate);
           props.setFormula({
             displayedFormula: expressionToCalculate + "=",

@@ -55,6 +55,7 @@ function App() {
           expression={expression}
           setExpression={setExpression}
           setFormula={setFormula}
+          currentVariable={currentVariable}
         />
         <Formulas formula={formula.displayedFormula} result={formula.result} />
       </div>

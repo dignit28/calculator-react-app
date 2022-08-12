@@ -3,6 +3,7 @@ import React from "react";
 import { EditFormWrapper, FocusTrap } from "./EditForm.styles";
 // Data
 import { saveData } from "../../data/saveData";
+import { BANNED_VARIABLE_NAMES } from "../../data/bannedVariableNames";
 
 type EditFormProps = {
   onKeyDown: (e: any) => void;
@@ -33,8 +34,6 @@ const EditForm: React.FC<EditFormProps> = (props) => {
     props.setCurrentVariable(variableName);
     props.closeEditForm();
   };
-
-  const BANNED_VARIABLE_NAMES = ["e"];
 
   const createNewVariable = (event: React.FormEvent) => {
     event.preventDefault();
