@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import Calculator from "./components/Calculator";
-import Formulas from "./components/Formulas";
-import Saves from "./components/Saves";
-import Variables from "./components/Variables";
+import Calculator from "./components/Calculator/Calculator";
+import Formulas from "./components/Formulas/Formulas";
+import Saves from "./components/Saves/Saves";
+import Variables from "./components/Variables/Variables";
 import { MathJaxContext } from "better-react-mathjax";
 import { saveData } from "./data/saveData";
 

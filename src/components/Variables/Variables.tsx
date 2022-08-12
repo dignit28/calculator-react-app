@@ -1,8 +1,7 @@
 import React from "react";
-import { saveData, updateSaveData } from "../data/saveData";
-import { FormulaState, ExpressionState } from "../App";
+import { saveData, updateSaveData } from "../../data/saveData";
+import { FormulaState, ExpressionState } from "../../App";
 import EditForm from "./EditForm";
-import { on } from "events";
 
 type VariablesProps = {
   currentVariable: string;

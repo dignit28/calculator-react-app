@@ -2,12 +2,12 @@ import React from "react";
 // Styles
 import { CalculatorWrapper } from "./Calculator.styles";
 // Functions
-import validateExpression from "../math_utility/validateExpression";
-import { calculateRPN } from "../math_utility/evaluationRPN";
+import validateExpression from "../../math_utility/validateExpression";
+import { calculateRPN } from "../../math_utility/evaluationRPN";
 // Data
-import buttons from "../data/buttons";
+import buttons from "../../data/buttons";
 // Types
-import { ExpressionState, FormulaState } from "../App";
+import { ExpressionState, FormulaState } from "../../App";
 
 type CalculatorProps = {
   expression: ExpressionState;
