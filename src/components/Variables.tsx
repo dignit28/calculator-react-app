@@ -1,6 +1,8 @@
 import React from "react";
 import { saveData, updateSaveData } from "../data/saveData";
 import { FormulaState, ExpressionState } from "../App";
+import EditForm from "./EditForm";
+import { on } from "events";
 
 type VariablesProps = {
   currentVariable: string;
@@ -10,6 +12,32 @@ type VariablesProps = {
 };
 
 const Variables: React.FC<VariablesProps> = (props) => {
+  const [editIsShown, setEditIsShown] = React.useState(false);
+  const [cursorClickPosition, setCursorClickPosition] = React.useState<
+    [number, number]
+  >([0, 0]);
+
+  const openEditForm = (event: React.MouseEvent) => {
+    setEditIsShown(true);
+    setCursorClickPosition([event.clientX, event.clientY]);
+  };
+
+  const closeEditForm = () => {
+    setEditIsShown(false);
+  };
+
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    console.log(event.key);
+    if (event.key === "Escape") {
+      closeEditForm();
+    }
+  };
+
+  const onClickOutside = (event: React.SyntheticEvent<HTMLElement>) => {
+    const target = event.target as HTMLElement;
+    if (!target.classList.contains("edit-form")) closeEditForm();
+  };
+
   const [variables, setVariables] = React.useState<string[]>(
     Object.keys(saveData[0])
   );
@@ -27,7 +55,21 @@ const Variables: React.FC<VariablesProps> = (props) => {
     );
   });
 
-  return <div>{variableElements}</div>;
+  return (
+    <div onKeyDown={onKeyDown}>
+      <div>
+        {variableElements}
+        <button onClick={openEditForm}>+</button>
+      </div>
+      {editIsShown && (
+        <EditForm
+          onKeyDown={onKeyDown}
+          onClickOutside={onClickOutside}
+          position={cursorClickPosition}
+        />
+      )}
+    </div>
+  );
 };
 
 export default Variables;
