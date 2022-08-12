@@ -1,6 +1,6 @@
 import { FormulaState, ExpressionState } from "../App";
 
-interface VariableData {
+export interface VariableData {
   variableName: string;
   variableComment: string;
   variableChildren: string[];
@@ -8,11 +8,11 @@ interface VariableData {
   formulaData: FormulaState;
 }
 
-type SaveData = Record<string, VariableData>[];
+type SaveData = VariableData[][];
 
 export const saveData: SaveData = [
-  {
-    x: {
+  [
+    {
       variableName: "x",
       variableComment: "Variable x",
       variableChildren: [],
@@ -25,7 +25,7 @@ export const saveData: SaveData = [
         result: "",
       },
     },
-    y: {
+    {
       variableName: "y",
       variableComment: "Variable y",
       variableChildren: [],
@@ -38,8 +38,24 @@ export const saveData: SaveData = [
         result: "",
       },
     },
-  },
+  ],
 ];
+
+export const updateSaveData = (
+  save: number,
+  variable: string,
+  newInputData: ExpressionState,
+  newFormulaData: FormulaState
+) => {
+  const newArrayValue = newInputData.displayedValue.split("");
+  newArrayValue.push("caret");
+
+  saveData[save][findVariableIndex(variable)].inputData = {
+    displayedValue: newInputData.displayedValue,
+    arrayValue: newArrayValue,
+  };
+  saveData[save][findVariableIndex(variable)].formulaData = newFormulaData;
+};
 
 export const updateInputData = (
   save: number,
@@ -49,7 +65,7 @@ export const updateInputData = (
   const newArrayValue = newInputData.displayedValue.split("");
   newArrayValue.push("caret");
 
-  saveData[save][variable].inputData = {
+  saveData[save][findVariableIndex(variable)].inputData = {
     displayedValue: newInputData.displayedValue,
     arrayValue: newArrayValue,
   };
@@ -60,7 +76,7 @@ export const updateFormulaData = (
   variable: string,
   newFormulaData: FormulaState
 ) => {
-  saveData[save][variable].formulaData = newFormulaData;
+  saveData[save][findVariableIndex(variable)].formulaData = newFormulaData;
 };
 
 export const updateVariableChildren = (
@@ -78,5 +94,13 @@ export const updateVariableChildren = (
 
   console.log(variablesInExpression);
 
-  saveData[0][parentVariable].variableChildren = variablesInExpression;
+  saveData[0][findVariableIndex(parentVariable)].variableChildren = variablesInExpression;
+};
+
+export const findVariableIndex = (variable: string) => {
+  const variableIndex = saveData[0].findIndex((variableData: VariableData) => {
+    return variableData.variableName === variable;
+  });
+
+  return variableIndex !== -1 ? variableIndex : 0;
 };

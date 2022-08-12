@@ -9,6 +9,7 @@ import {
 import {
   updateInputData,
   saveData,
+  findVariableIndex,
 } from "../../data/saveData";
 import evaluateVariable from "../../math_utility/evaluateVariable";
 // Data
@@ -55,14 +56,16 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
           // After evaluation finished, evaluate dependent variables
           // First add every parent of every dependent variable into array using recursion
           // Duplicate variables will be removed later
-          const currentSaveVariables = Object.keys(saveData[0]);
+          const currentSaveVariables = saveData[0].map((variableData) => {
+            return variableData.variableName;
+          });
           const evaluationArrayWithDuplicates: string[] = [];
           const addParentsToArray = (childVariable: string) => {
             currentSaveVariables.forEach((parentVariable) => {
               if (
-                saveData[0][parentVariable].variableChildren.includes(
-                  childVariable
-                )
+                saveData[0][
+                  findVariableIndex(parentVariable)
+                ].variableChildren.includes(childVariable)
               ) {
                 evaluationArrayWithDuplicates.push(parentVariable);
                 addParentsToArray(parentVariable);
@@ -93,7 +96,8 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
             const currentVariable = evaluationArray.shift();
             evaluateVariable(
               currentVariable!,
-              saveData[0][currentVariable!].formulaData.displayedFormula
+              saveData[0][findVariableIndex(currentVariable!)].formulaData
+                .displayedFormula
             );
           }
 

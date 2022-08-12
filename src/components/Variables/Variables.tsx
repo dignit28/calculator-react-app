@@ -2,6 +2,8 @@ import React from "react";
 import { saveData, updateInputData } from "../../data/saveData";
 import { FormulaState, ExpressionState } from "../../App";
 import EditForm from "./EditForm";
+// Interfaces
+import { VariableData } from "../../data/saveData";
 
 type VariablesProps = {
   currentVariable: string;
@@ -12,7 +14,7 @@ type VariablesProps = {
 
 const Variables: React.FC<VariablesProps> = (props) => {
   const [formType, setFormType] = React.useState("new");
-  const [assignedFormVariable, setAssignedFormVariable] = React.useState("")
+  const [assignedFormVariable, setAssignedFormVariable] = React.useState("");
   const [editIsShown, setEditIsShown] = React.useState(false);
   const [cursorClickPosition, setCursorClickPosition] = React.useState<
     [number, number]
@@ -38,12 +40,10 @@ const Variables: React.FC<VariablesProps> = (props) => {
     if (target.classList.contains("focus-trap")) closeEditForm();
   };
 
-  const [variables, setVariables] = React.useState<string[]>(
-    Object.keys(saveData[0])
-  );
+  const [variables, setVariables] = React.useState<VariableData[]>(saveData[0]);
 
   const updateVariables = () => {
-    setVariables(Object.keys(saveData[0]));
+    setVariables(saveData[0]);
   };
 
   const handleButtonClick = (variable: string) => {
@@ -51,15 +51,15 @@ const Variables: React.FC<VariablesProps> = (props) => {
     props.setCurrentVariable(variable);
   };
 
-  const newVariable = (event: React.MouseEvent) =>  {
+  const newVariable = (event: React.MouseEvent) => {
     setFormType("new");
     openEditForm(event);
-  }
+  };
 
   const editVariable = (event: React.MouseEvent, variable: string) => {
     event.stopPropagation();
     setFormType("edit");
-    setAssignedFormVariable(variable)
+    setAssignedFormVariable(variable);
     openEditForm(event);
   };
 
@@ -69,9 +69,14 @@ const Variables: React.FC<VariablesProps> = (props) => {
 
   const variableElements = variables.map((variable) => {
     return (
-      <button key={variable} onClick={() => handleButtonClick(variable)}>
-        {variable}
-        <button onClick={(event) => editVariable(event, variable)}>E</button>
+      <button
+        key={variable.variableName}
+        onClick={() => handleButtonClick(variable.variableName)}
+      >
+        {variable.variableName}
+        <button onClick={(event) => editVariable(event, variable.variableName)}>
+          E
+        </button>
         <button onClick={deleteVariable}>D</button>
       </button>
     );

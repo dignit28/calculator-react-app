@@ -1,6 +1,8 @@
 import React from "react";
 // Styles
 import { EditFormWrapper, FocusTrap } from "./EditForm.styles";
+// Functions
+import { findVariableIndex } from "../../data/saveData";
 // Data
 import { saveData } from "../../data/saveData";
 import { BANNED_VARIABLE_NAMES } from "../../data/bannedVariableNames";
@@ -22,7 +24,8 @@ const EditForm: React.FC<EditFormProps> = (props) => {
     variableComment:
       props.formType === "new"
         ? ""
-        : saveData[0][props.assignedVariable].variableComment,
+        : saveData[0][findVariableIndex(props.assignedVariable)]
+            .variableComment,
   });
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -51,10 +54,12 @@ const EditForm: React.FC<EditFormProps> = (props) => {
       formData.variableName.match(/^[a-z]$/i) &&
       !BANNED_VARIABLE_NAMES.includes(formData.variableName)
     ) {
-      const existingVariables = Object.keys(saveData[0]);
+      const existingVariables = saveData[0].map((variableData) => {
+        return variableData.variableName;
+      });
       // Check if new variable name is not taken
       if (!existingVariables.includes(formData.variableName)) {
-        saveData[0][formData.variableName] = {
+        saveData[0].push({
           variableName: formData.variableName,
           variableComment: formData.variableComment,
           variableChildren: [],
@@ -66,7 +71,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
             displayedFormula: "",
             result: "",
           },
-        };
+        });
 
         closeFormCleanup(formData.variableName);
       } else {
@@ -87,7 +92,9 @@ const EditForm: React.FC<EditFormProps> = (props) => {
       newVariableName.match(/^[a-z]$/i) &&
       !BANNED_VARIABLE_NAMES.includes(newVariableName)
     ) {
-      const existingVariables = Object.keys(saveData[0]);
+      const existingVariables = saveData[0].map((variableData) => {
+        return variableData.variableName;
+      });
       // Check if variable name is not taken or not changed
       if (
         !existingVariables.includes(newVariableName) ||
@@ -98,7 +105,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
         // Iterate over every variable to fix dependencies
         existingVariables.forEach((variable) => {
           console.log("HERE2");
-          const variableData = saveData[0][variable];
+          const variableData = saveData[0][findVariableIndex(variable)];
           const childrenOfVariable = variableData.variableChildren;
           // If the changing variable is in child list of current variable,
           // Rewrite current variable's data with new variable name
@@ -143,17 +150,11 @@ const EditForm: React.FC<EditFormProps> = (props) => {
           }
         });
         // After editing dependent variables, fix the variable itself
-        console.log("HERE4");
-        saveData[0][newVariableName] = saveData[0][props.assignedVariable];
-        if (newVariableName === props.assignedVariable) {
-          console.log("HERE5");
-          saveData[0][newVariableName].variableComment = newVariableComment;
-        } else {
-          console.log("HERE6");
-          saveData[0][newVariableName].variableName = newVariableName;
-          saveData[0][newVariableName].variableComment = newVariableComment;
-          delete saveData[0][props.assignedVariable];
-        }
+        console.log("HERE6");
+        saveData[0][findVariableIndex(props.assignedVariable)].variableComment =
+          newVariableComment;
+        saveData[0][findVariableIndex(props.assignedVariable)].variableName =
+          newVariableName;
 
         closeFormCleanup(newVariableName);
         console.log("HERE11");

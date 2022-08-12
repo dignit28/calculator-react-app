@@ -4,7 +4,7 @@ import { ExpressionTokenType } from "../utility/enums";
 import { BANNED_VARIABLE_NAMES } from "../data/bannedVariableNames";
 import { saveData } from "../data/saveData";
 // Functions
-import { updateVariableChildren } from "../data/saveData";
+import { updateVariableChildren, findVariableIndex } from "../data/saveData";
 
 export function validateVariables(
   parentVariable: string,
@@ -19,9 +19,11 @@ export function validateVariables(
     )
   );
 
-  const currentChildren = saveData[0][parentVariable].variableChildren;
+  const currentChildren =
+    saveData[0][findVariableIndex(parentVariable)].variableChildren;
   function cancelChildrenChange() {
-    saveData[0][parentVariable].variableChildren = currentChildren;
+    saveData[0][findVariableIndex(parentVariable)].variableChildren =
+      currentChildren;
   }
 
   updateVariableChildren(parentVariable, expression);
@@ -45,7 +47,9 @@ export function validateVariables(
     return false;
   }
 
-  const currentSaveVariables = Object.keys(saveData[0]);
+  const currentSaveVariables = saveData[0].map((variableData) => {
+    return variableData.variableName;
+  });
 
   const HAS_UNKNOWN_VARIABLES = variablesInExpression.some((variable) => {
     return !currentSaveVariables.includes(variable);
@@ -70,7 +74,7 @@ export function validateVariables(
           acc &&
           checkChildrenVariables(
             variableToCheck,
-            saveData[0][childVariable].variableChildren
+            saveData[0][findVariableIndex(childVariable)].variableChildren
           )
         );
       }, true);
@@ -79,7 +83,7 @@ export function validateVariables(
 
   const NO_VARIABLE_RECURSION = checkChildrenVariables(
     parentVariable,
-    saveData[0][parentVariable].variableChildren
+    saveData[0][findVariableIndex(parentVariable)].variableChildren
   );
 
   if (!NO_VARIABLE_RECURSION) {

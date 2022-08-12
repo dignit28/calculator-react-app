@@ -1,4 +1,4 @@
-import { saveData } from "../data/saveData";
+import { saveData, findVariableIndex } from "../data/saveData";
 import { BANNED_VARIABLE_NAMES } from "../data/bannedVariableNames";
 
 export default function switchVariablesToValues(expression: string): string {
@@ -6,7 +6,7 @@ export default function switchVariablesToValues(expression: string): string {
 
   const arrayedExpressionWithValues = arrayedExpression.map((token) => {
     if (token.match(/^[a-z]$/i) && !BANNED_VARIABLE_NAMES.includes(token)) {
-      return saveData[0][token].formulaData.result;
+      return saveData[0][findVariableIndex(token)].formulaData.result;
     } else {
       return token;
     }

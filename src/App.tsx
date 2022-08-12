@@ -5,6 +5,7 @@ import Saves from "./components/Saves/Saves";
 import Variables from "./components/Variables/Variables";
 import { MathJaxContext } from "better-react-mathjax";
 import { saveData } from "./data/saveData";
+import { findVariableIndex } from "./data/saveData";
 
 const config = {
   loader: { load: ["input/asciimath"] },
@@ -29,18 +30,21 @@ export type FormulaState = {
 
 function App() {
   const [currentVariable, setCurrentVariable] = React.useState<string>(
-    Object.keys(saveData[0])[0]
+    saveData[0][0].variableName
   );
+
+  const currentVariableIndex = findVariableIndex(currentVariable);
+
   const [expression, setExpression] = React.useState<ExpressionState>(
-    saveData[0][currentVariable].inputData
+    saveData[0][currentVariableIndex].inputData
   );
   const [formula, setFormula] = React.useState<FormulaState>(
-    saveData[0][currentVariable].formulaData
+    saveData[0][currentVariableIndex].formulaData
   );
 
   React.useEffect(() => {
-    setExpression(saveData[0][currentVariable].inputData);
-    setFormula(saveData[0][currentVariable].formulaData);
+    setExpression(saveData[0][currentVariableIndex].inputData);
+    setFormula(saveData[0][currentVariableIndex].formulaData);
   }, [currentVariable]);
 
   return (
