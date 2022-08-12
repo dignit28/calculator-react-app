@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Calculator from "./components/Calculator/Calculator";
 import Formulas from "./components/Formulas/Formulas";
 import Saves from "./components/Saves/Saves";
@@ -57,7 +57,11 @@ function App() {
           setFormula={setFormula}
           currentVariable={currentVariable}
         />
-        <Formulas formula={formula.displayedFormula} result={formula.result} />
+        <Formulas
+          formula={formula.displayedFormula}
+          result={formula.result}
+          currentVariable={currentVariable}
+        />
       </div>
     </MathJaxContext>
   );

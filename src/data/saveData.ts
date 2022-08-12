@@ -41,11 +41,10 @@ export const saveData: SaveData = [
   },
 ];
 
-export const updateSaveData = (
+export const updateInputData = (
   save: number,
   variable: string,
-  newInputData: ExpressionState,
-  newFormulaData: FormulaState
+  newInputData: ExpressionState
 ) => {
   const newArrayValue = newInputData.displayedValue.split("");
   newArrayValue.push("caret");
@@ -54,6 +53,13 @@ export const updateSaveData = (
     displayedValue: newInputData.displayedValue,
     arrayValue: newArrayValue,
   };
+};
+
+export const updateFormulaData = (
+  save: number,
+  variable: string,
+  newFormulaData: FormulaState
+) => {
   saveData[save][variable].formulaData = newFormulaData;
 };
 

@@ -6,7 +6,11 @@ import {
   validateExpression,
   validateVariables,
 } from "../../math_utility/validateExpression";
-import { calculateRPN } from "../../math_utility/evaluationRPN";
+import {
+  updateInputData,
+  saveData,
+} from "../../data/saveData";
+import evaluateVariable from "../../math_utility/evaluateVariable";
 // Data
 import buttons from "../../data/buttons";
 // Types
@@ -44,13 +48,57 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
           validateExpression(expressionToCalculate) &&
           validateVariables(props.currentVariable, expressionToCalculate)
         ) {
-          const finalResult = calculateRPN(expressionToCalculate);
-          props.setFormula({
-            displayedFormula: expressionToCalculate + "=",
-            result: Number.isNaN(finalResult)
-              ? "Invalid input"
-              : finalResult.toString(),
-          });
+          const resultingFormula = evaluateVariable(
+            props.currentVariable,
+            expressionToCalculate
+          );
+          // After evaluation finished, evaluate dependent variables
+          // First add every parent of every dependent variable into array using recursion
+          // Duplicate variables will be removed later
+          const currentSaveVariables = Object.keys(saveData[0]);
+          const evaluationArrayWithDuplicates: string[] = [];
+          const addParentsToArray = (childVariable: string) => {
+            currentSaveVariables.forEach((parentVariable) => {
+              if (
+                saveData[0][parentVariable].variableChildren.includes(
+                  childVariable
+                )
+              ) {
+                evaluationArrayWithDuplicates.push(parentVariable);
+                addParentsToArray(parentVariable);
+              }
+            });
+          };
+
+          addParentsToArray(props.currentVariable);
+
+          console.log("EVAL Q DUPL ", evaluationArrayWithDuplicates);
+
+          // Now create array without duplicates by popping the one with duplicates
+          // That way least dependent, lower-order variables will be evaluated first
+          // And higher-order variables will be evaluated last
+          const evaluationArray: string[] = [];
+
+          while (evaluationArrayWithDuplicates.length !== 0) {
+            const poppedParent = evaluationArrayWithDuplicates.pop();
+            if (!evaluationArray.includes(poppedParent!)) {
+              evaluationArray.unshift(poppedParent!);
+            }
+          }
+
+          console.log("EVAL Q ", evaluationArray);
+
+          // Finally evaluate every dependent variable in order
+          while (evaluationArray.length !== 0) {
+            const currentVariable = evaluationArray.shift();
+            evaluateVariable(
+              currentVariable!,
+              saveData[0][currentVariable!].formulaData.displayedFormula
+            );
+          }
+
+          // Lastly, update current formula state
+          props.setFormula(resultingFormula);
         } else {
           props.setFormula((prevFormula) => {
             return {
@@ -59,6 +107,7 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
             };
           });
         }
+        updateInputData(0, props.currentVariable, props.expression);
         break;
       default: // Add input
         props.setExpression((prevExpression) => {

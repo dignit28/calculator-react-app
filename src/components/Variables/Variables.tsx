@@ -1,5 +1,5 @@
 import React from "react";
-import { saveData, updateSaveData } from "../../data/saveData";
+import { saveData, updateInputData } from "../../data/saveData";
 import { FormulaState, ExpressionState } from "../../App";
 import EditForm from "./EditForm";
 
@@ -45,7 +45,7 @@ const Variables: React.FC<VariablesProps> = (props) => {
   };
 
   const handleButtonClick = (variable: string) => {
-    updateSaveData(0, props.currentVariable, props.expression, props.formula);
+    updateInputData(0, props.currentVariable, props.expression);
     props.setCurrentVariable(variable);
   };
 

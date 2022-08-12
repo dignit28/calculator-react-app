@@ -4,6 +4,7 @@ import { MathJax } from "better-react-mathjax";
 type FormulasProps = {
   formula: string;
   result: string;
+  currentVariable: string;
 };
 /////////////// FIX //////////////////
 /*
@@ -16,7 +17,14 @@ const Formulas: React.FC<FormulasProps> = React.memo((props) =>
     <span>Invalid input</span>
   ) : (
     <div>
-      <MathJax inline dynamic>{`$${props.formula}${props.result}$`}</MathJax>
+      <MathJax inline dynamic>
+      {`$
+      ${props.formula === "" ? "" : props.currentVariable + "="}
+      ${props.formula}
+      ${props.formula === "" ? "" : "="}
+      ${props.result}
+      $`}
+      </MathJax>
     </div>
   )
 );
