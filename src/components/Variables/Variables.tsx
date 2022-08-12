@@ -26,7 +26,6 @@ const Variables: React.FC<VariablesProps> = (props) => {
   };
 
   const onKeyDown = (event: React.KeyboardEvent) => {
-    console.log(event.key);
     if (event.key === "Escape") {
       closeEditForm();
     }
@@ -34,12 +33,16 @@ const Variables: React.FC<VariablesProps> = (props) => {
 
   const onClickOutside = (event: React.SyntheticEvent<HTMLElement>) => {
     const target = event.target as HTMLElement;
-    if (!target.classList.contains("edit-form")) closeEditForm();
+    if (target.classList.contains("focus-trap")) closeEditForm();
   };
 
   const [variables, setVariables] = React.useState<string[]>(
     Object.keys(saveData[0])
   );
+
+  const updateVariables = () => {
+    setVariables(Object.keys(saveData[0]));
+  };
 
   const handleButtonClick = (variable: string) => {
     updateSaveData(0, props.currentVariable, props.expression, props.formula);
@@ -65,6 +68,9 @@ const Variables: React.FC<VariablesProps> = (props) => {
           onKeyDown={onKeyDown}
           onClickOutside={onClickOutside}
           position={cursorClickPosition}
+          updateVariables={updateVariables}
+          closeEditForm={closeEditForm}
+          setCurrentVariable={props.setCurrentVariable}
         />
       )}
     </div>

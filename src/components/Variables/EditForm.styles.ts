@@ -1,14 +1,15 @@
 import styled from "styled-components";
 
 type EditFormWrapperProps = {
-  className: string;
   cursorX: number;
   cursorY: number;
+  onSubmit: React.FormEventHandler<HTMLFormElement>;
 };
 
-export const EditFormWrapper = styled.div<EditFormWrapperProps>`
+export const EditFormWrapper = styled.form<EditFormWrapperProps>`
   position: fixed;
-  background-color: black;
+  border: solid 2px black;
+  background-color: white;
   top: ${({ cursorY }) => cursorY}px;
   left: ${({ cursorX }) => cursorX}px;
   height: 200px;
