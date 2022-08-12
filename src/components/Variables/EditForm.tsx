@@ -6,6 +6,8 @@ import { saveData } from "../../data/saveData";
 import { BANNED_VARIABLE_NAMES } from "../../data/bannedVariableNames";
 
 type EditFormProps = {
+  formType: string;
+  assignedVariable: string;
   onKeyDown: (e: any) => void;
   onClickOutside: (e: any) => void;
   position: [number, number];
@@ -16,8 +18,11 @@ type EditFormProps = {
 
 const EditForm: React.FC<EditFormProps> = (props) => {
   const [formData, setFormData] = React.useState({
-    variableName: "",
-    variableComment: "",
+    variableName: props.formType === "new" ? "" : props.assignedVariable,
+    variableComment:
+      props.formType === "new"
+        ? ""
+        : saveData[0][props.assignedVariable].variableComment,
   });
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -30,9 +35,13 @@ const EditForm: React.FC<EditFormProps> = (props) => {
   }
 
   const closeFormCleanup = (variableName: string) => {
+    console.log("HERE7");
     props.updateVariables();
+    console.log("HERE8");
     props.setCurrentVariable(variableName);
+    console.log("HERE9");
     props.closeEditForm();
+    console.log("HERE10");
   };
 
   const createNewVariable = (event: React.FormEvent) => {
@@ -42,9 +51,8 @@ const EditForm: React.FC<EditFormProps> = (props) => {
       formData.variableName.match(/^[a-z]$/i) &&
       !BANNED_VARIABLE_NAMES.includes(formData.variableName)
     ) {
-      console.log("here");
       const existingVariables = Object.keys(saveData[0]);
-      // Check if new variable name is already taken
+      // Check if new variable name is not taken
       if (!existingVariables.includes(formData.variableName)) {
         saveData[0][formData.variableName] = {
           variableName: formData.variableName,
@@ -69,6 +77,91 @@ const EditForm: React.FC<EditFormProps> = (props) => {
     }
   };
 
+  const editVariable = (event: React.FormEvent) => {
+    event.preventDefault();
+    // Check if variable name is correct and not banned for use
+    const newVariableName = formData.variableName;
+    const newVariableComment = formData.variableComment;
+    console.log(newVariableComment);
+    if (
+      newVariableName.match(/^[a-z]$/i) &&
+      !BANNED_VARIABLE_NAMES.includes(newVariableName)
+    ) {
+      const existingVariables = Object.keys(saveData[0]);
+      // Check if variable name is not taken or not changed
+      if (
+        !existingVariables.includes(newVariableName) ||
+        newVariableName === props.assignedVariable
+      ) {
+        console.log("HERE");
+        // If variable name is correct, start editing process
+        // Iterate over every variable to fix dependencies
+        existingVariables.forEach((variable) => {
+          console.log("HERE2");
+          const variableData = saveData[0][variable];
+          const childrenOfVariable = variableData.variableChildren;
+          // If the changing variable is in child list of current variable,
+          // Rewrite current variable's data with new variable name
+          const childIndex = childrenOfVariable.indexOf(props.assignedVariable);
+          if (childIndex !== -1) {
+            console.log("HERE3");
+            // Rewrite children array
+            variableData.variableChildren[childIndex] = newVariableName;
+            // Rewrite input data
+            // Assert that user didn't change the input after last evaluation
+            if (
+              variableData.inputData.displayedValue ===
+              variableData.formulaData.displayedFormula
+            ) {
+              // Simply replace old variable with new in arrayValue
+              const oldNameVariableIndex =
+                variableData.inputData.arrayValue.indexOf(
+                  props.assignedVariable
+                );
+              variableData.inputData.arrayValue[oldNameVariableIndex] =
+                newVariableName;
+
+              // After changing array value, use it to create new input value
+              variableData.inputData.displayedValue =
+                variableData.inputData.arrayValue
+                  .filter((token) => {
+                    if (token !== "caret") {
+                      return true;
+                    }
+                  })
+                  .join("");
+            } // if user changed input, don't change it's values
+            // Rewrite formula data
+            const arrayedDisplayedFormula =
+              variableData.formulaData.displayedFormula.split("");
+            const oldNameVariableIndex = arrayedDisplayedFormula.indexOf(
+              props.assignedVariable
+            );
+            arrayedDisplayedFormula[oldNameVariableIndex] = newVariableName;
+            variableData.formulaData.displayedFormula =
+              arrayedDisplayedFormula.join("");
+          }
+        });
+        // After editing dependent variables, fix the variable itself
+        console.log("HERE4");
+        saveData[0][newVariableName] = saveData[0][props.assignedVariable];
+        if (newVariableName === props.assignedVariable) {
+          console.log("HERE5");
+          saveData[0][newVariableName].variableComment = newVariableComment;
+        } else {
+          console.log("HERE6");
+          saveData[0][newVariableName].variableName = newVariableName;
+          saveData[0][newVariableName].variableComment = newVariableComment;
+          delete saveData[0][props.assignedVariable];
+        }
+
+        closeFormCleanup(newVariableName);
+        console.log("HERE11");
+      }
+    }
+    console.log("HERE12");
+  };
+
   return (
     <FocusTrap
       className="focus-trap"
@@ -78,7 +171,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
       <EditFormWrapper
         cursorX={props.position[0]}
         cursorY={props.position[1]}
-        onSubmit={createNewVariable}
+        onSubmit={props.formType === "new" ? createNewVariable : editVariable}
       >
         <p>Variable Name</p>
         <input
@@ -96,7 +189,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
           onChange={handleChange}
           value={formData.variableComment}
         />
-        <button>Create</button>
+        <button>{props.formType === "new" ? "Create" : "Edit"}</button>
       </EditFormWrapper>
     </FocusTrap>
   );

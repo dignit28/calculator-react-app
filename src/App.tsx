@@ -28,12 +28,14 @@ export type FormulaState = {
 };
 
 function App() {
-  const [currentVariable, setCurrentVariable] = React.useState<string>("x");
+  const [currentVariable, setCurrentVariable] = React.useState<string>(
+    Object.keys(saveData[0])[0]
+  );
   const [expression, setExpression] = React.useState<ExpressionState>(
-    saveData[0].x.inputData
+    saveData[0][currentVariable].inputData
   );
   const [formula, setFormula] = React.useState<FormulaState>(
-    saveData[0].x.formulaData
+    saveData[0][currentVariable].formulaData
   );
 
   React.useEffect(() => {

@@ -11,6 +11,8 @@ type VariablesProps = {
 };
 
 const Variables: React.FC<VariablesProps> = (props) => {
+  const [formType, setFormType] = React.useState("new");
+  const [assignedFormVariable, setAssignedFormVariable] = React.useState("")
   const [editIsShown, setEditIsShown] = React.useState(false);
   const [cursorClickPosition, setCursorClickPosition] = React.useState<
     [number, number]
@@ -49,10 +51,28 @@ const Variables: React.FC<VariablesProps> = (props) => {
     props.setCurrentVariable(variable);
   };
 
+  const newVariable = (event: React.MouseEvent) =>  {
+    setFormType("new");
+    openEditForm(event);
+  }
+
+  const editVariable = (event: React.MouseEvent, variable: string) => {
+    event.stopPropagation();
+    setFormType("edit");
+    setAssignedFormVariable(variable)
+    openEditForm(event);
+  };
+
+  const deleteVariable = (event: React.MouseEvent) => {
+    event.stopPropagation();
+  };
+
   const variableElements = variables.map((variable) => {
     return (
       <button key={variable} onClick={() => handleButtonClick(variable)}>
         {variable}
+        <button onClick={(event) => editVariable(event, variable)}>E</button>
+        <button onClick={deleteVariable}>D</button>
       </button>
     );
   });
@@ -61,10 +81,12 @@ const Variables: React.FC<VariablesProps> = (props) => {
     <div onKeyDown={onKeyDown}>
       <div>
         {variableElements}
-        <button onClick={openEditForm}>+</button>
+        <button onClick={(event) => newVariable(event)}>+</button>
       </div>
       {editIsShown && (
         <EditForm
+          formType={formType}
+          assignedVariable={assignedFormVariable}
           onKeyDown={onKeyDown}
           onClickOutside={onClickOutside}
           position={cursorClickPosition}
