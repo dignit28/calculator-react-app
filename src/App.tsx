@@ -45,7 +45,7 @@ function App() {
   React.useEffect(() => {
     setExpression(saveData[0][currentVariableIndex].inputData);
     setComputedFormula(saveData[0][currentVariableIndex].computedData);
-  }, [currentVariable]);
+  }, [currentVariableIndex]);
 
   return (
     <MathJaxContext config={config}>

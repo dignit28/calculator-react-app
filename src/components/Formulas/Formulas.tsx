@@ -6,15 +6,12 @@ type FormulasProps = {
   computedResult: string;
   currentVariable: string;
 };
-/////////////// FIX //////////////////
-/*
-"+-" Rendering
-Infinity | -Infinity rendering
-*/
-///////////// FIX END ////////////////
 
 const fixASCIIMathRendering = (expression: string) => {
-  // This does nothing yet
+  // Fix "+-" rendering
+  expression = expression.replaceAll(/\+-/g, "+\\-");
+  // Fix "Infinity" rendering
+  expression = expression.replaceAll(/Infinity/g, "oo");
   return expression;
 };
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { saveData, updateInputData } from "../../data/saveData";
-import { ComputedFormulaState, ExpressionState } from "../../App";
+import { ExpressionState } from "../../App";
 import EditForm from "./EditForm";
 // Interfaces
 import { VariableData } from "../../data/saveData";
