@@ -1,11 +1,11 @@
-import { FormulaState, ExpressionState } from "../App";
+import { ComputedFormulaState, ExpressionState } from "../App";
 
 export interface VariableData {
   variableName: string;
   variableComment: string;
   variableChildren: string[];
   inputData: ExpressionState;
-  formulaData: FormulaState;
+  computedData: ComputedFormulaState;
 }
 
 type SaveData = VariableData[][];
@@ -20,9 +20,9 @@ export const saveData: SaveData = [
         displayedValue: "",
         arrayValue: ["caret"],
       },
-      formulaData: {
-        displayedFormula: "",
-        result: "",
+      computedData: {
+        computedFormula: "",
+        computedResult: "",
       },
     },
     {
@@ -33,9 +33,9 @@ export const saveData: SaveData = [
         displayedValue: "",
         arrayValue: ["caret"],
       },
-      formulaData: {
-        displayedFormula: "",
-        result: "",
+      computedData: {
+        computedFormula: "",
+        computedResult: "",
       },
     },
   ],
@@ -45,7 +45,7 @@ export const updateSaveData = (
   save: number,
   variable: string,
   newInputData: ExpressionState,
-  newFormulaData: FormulaState
+  newComputedData: ComputedFormulaState
 ) => {
   const newArrayValue = newInputData.displayedValue.split("");
   newArrayValue.push("caret");
@@ -54,7 +54,7 @@ export const updateSaveData = (
     displayedValue: newInputData.displayedValue,
     arrayValue: newArrayValue,
   };
-  saveData[save][findVariableIndex(variable)].formulaData = newFormulaData;
+  saveData[save][findVariableIndex(variable)].computedData = newComputedData;
 };
 
 export const updateInputData = (
@@ -74,9 +74,9 @@ export const updateInputData = (
 export const updateFormulaData = (
   save: number,
   variable: string,
-  newFormulaData: FormulaState
+  newComputedData: ComputedFormulaState
 ) => {
-  saveData[save][findVariableIndex(variable)].formulaData = newFormulaData;
+  saveData[save][findVariableIndex(variable)].computedData = newComputedData;
 };
 
 export const updateVariableChildren = (
@@ -94,7 +94,8 @@ export const updateVariableChildren = (
 
   console.log(variablesInExpression);
 
-  saveData[0][findVariableIndex(parentVariable)].variableChildren = variablesInExpression;
+  saveData[0][findVariableIndex(parentVariable)].variableChildren =
+    variablesInExpression;
 };
 
 export const findVariableIndex = (variable: string) => {

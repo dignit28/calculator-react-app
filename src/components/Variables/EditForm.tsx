@@ -67,9 +67,9 @@ const EditForm: React.FC<EditFormProps> = (props) => {
             displayedValue: "",
             arrayValue: ["caret"],
           },
-          formulaData: {
-            displayedFormula: "",
-            result: "",
+          computedData: {
+            computedFormula: "",
+            computedResult: "",
           },
         });
 
@@ -118,7 +118,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
             // Assert that user didn't change the input after last evaluation
             if (
               variableData.inputData.displayedValue ===
-              variableData.formulaData.displayedFormula
+              variableData.computedData.computedFormula
             ) {
               // Simply replace old variable with new in arrayValue
               const oldNameVariableIndex =
@@ -138,14 +138,14 @@ const EditForm: React.FC<EditFormProps> = (props) => {
                   })
                   .join("");
             } // if user changed input, don't change it's values
-            // Rewrite formula data
+            // Rewrite computed data
             const arrayedDisplayedFormula =
-              variableData.formulaData.displayedFormula.split("");
+              variableData.computedData.computedFormula.split("");
             const oldNameVariableIndex = arrayedDisplayedFormula.indexOf(
               props.assignedVariable
             );
             arrayedDisplayedFormula[oldNameVariableIndex] = newVariableName;
-            variableData.formulaData.displayedFormula =
+            variableData.computedData.computedFormula =
               arrayedDisplayedFormula.join("");
           }
         });

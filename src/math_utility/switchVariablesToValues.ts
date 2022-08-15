@@ -6,7 +6,7 @@ export default function switchVariablesToValues(expression: string): string {
 
   const arrayedExpressionWithValues = arrayedExpression.map((token) => {
     if (token.match(/^[a-z]$/i) && !BANNED_VARIABLE_NAMES.includes(token)) {
-      return saveData[0][findVariableIndex(token)].formulaData.result;
+      return saveData[0][findVariableIndex(token)].computedData.computedResult;
     } else {
       return token;
     }

@@ -2,8 +2,8 @@ import React from "react";
 import { MathJax } from "better-react-mathjax";
 
 type FormulasProps = {
-  formula: string;
-  result: string;
+  computedFormula: string;
+  computedResult: string;
   currentVariable: string;
 };
 /////////////// FIX //////////////////
@@ -12,17 +12,23 @@ type FormulasProps = {
 Infinity | -Infinity rendering
 */
 ///////////// FIX END ////////////////
+
+const fixASCIIMathRendering = (expression: string) => {
+  // This does nothing yet
+  return expression;
+};
+
 const Formulas: React.FC<FormulasProps> = React.memo((props) =>
-  props.result === "Invalid input" ? (
+  props.computedResult === "Invalid input" ? (
     <span>Invalid input</span>
   ) : (
     <div>
       <MathJax inline dynamic>
-      {`$
-      ${props.formula === "" ? "" : props.currentVariable + "="}
-      ${props.formula}
-      ${props.formula === "" ? "" : "="}
-      ${props.result}
+        {`$
+      ${props.computedFormula === "" ? "" : props.currentVariable + "="}
+      ${fixASCIIMathRendering(props.computedFormula)}
+      ${props.computedFormula === "" ? "" : "="}
+      ${fixASCIIMathRendering(props.computedResult)}
       $`}
       </MathJax>
     </div>

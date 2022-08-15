@@ -1,6 +1,6 @@
 import React from "react";
 import { saveData, updateInputData } from "../../data/saveData";
-import { FormulaState, ExpressionState } from "../../App";
+import { ComputedFormulaState, ExpressionState } from "../../App";
 import EditForm from "./EditForm";
 // Interfaces
 import { VariableData } from "../../data/saveData";
@@ -8,7 +8,6 @@ import { VariableData } from "../../data/saveData";
 type VariablesProps = {
   currentVariable: string;
   setCurrentVariable: React.Dispatch<React.SetStateAction<string>>;
-  formula: FormulaState;
   expression: ExpressionState;
 };
 

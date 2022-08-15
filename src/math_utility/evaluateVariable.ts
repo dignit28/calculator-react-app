@@ -11,8 +11,8 @@ export default function evaluateVariable(
   );
   const finalResult = calculateRPN(expressionToCalculateOnlyValues);
   const resultingFormula = {
-    displayedFormula: expressionToCalculate,
-    result: Number.isNaN(finalResult)
+    computedFormula: expressionToCalculate,
+    computedResult: Number.isNaN(finalResult)
       ? "Invalid input"
       : finalResult.toString(),
   };

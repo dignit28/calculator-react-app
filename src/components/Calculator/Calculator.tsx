@@ -15,12 +15,14 @@ import evaluateVariable from "../../math_utility/evaluateVariable";
 // Data
 import buttons from "../../data/buttons";
 // Types
-import { ExpressionState, FormulaState } from "../../App";
+import { ExpressionState, ComputedFormulaState } from "../../App";
 
 type CalculatorProps = {
   expression: ExpressionState;
   setExpression: React.Dispatch<React.SetStateAction<ExpressionState>>;
-  setFormula: React.Dispatch<React.SetStateAction<FormulaState>>;
+  setComputedFormula: React.Dispatch<
+    React.SetStateAction<ComputedFormulaState>
+  >;
   currentVariable: string;
 };
 
@@ -96,17 +98,17 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
             const currentVariable = evaluationArray.shift();
             evaluateVariable(
               currentVariable!,
-              saveData[0][findVariableIndex(currentVariable!)].formulaData
-                .displayedFormula
+              saveData[0][findVariableIndex(currentVariable!)].computedData
+                .computedFormula
             );
           }
 
           // Lastly, update current formula state
-          props.setFormula(resultingFormula);
+          props.setComputedFormula(resultingFormula);
         } else {
-          props.setFormula((prevFormula) => {
+          props.setComputedFormula((prevComputedFormula) => {
             return {
-              ...prevFormula,
+              ...prevComputedFormula,
               result: "Invalid input",
             };
           });

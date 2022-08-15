@@ -23,9 +23,9 @@ export type ExpressionState = {
   arrayValue: string[];
 };
 
-export type FormulaState = {
-  displayedFormula: string;
-  result: string;
+export type ComputedFormulaState = {
+  computedFormula: string;
+  computedResult: string;
 };
 
 function App() {
@@ -38,13 +38,13 @@ function App() {
   const [expression, setExpression] = React.useState<ExpressionState>(
     saveData[0][currentVariableIndex].inputData
   );
-  const [formula, setFormula] = React.useState<FormulaState>(
-    saveData[0][currentVariableIndex].formulaData
+  const [computedFormula, setComputedFormula] = React.useState<ComputedFormulaState>(
+    saveData[0][currentVariableIndex].computedData
   );
 
   React.useEffect(() => {
     setExpression(saveData[0][currentVariableIndex].inputData);
-    setFormula(saveData[0][currentVariableIndex].formulaData);
+    setComputedFormula(saveData[0][currentVariableIndex].computedData);
   }, [currentVariable]);
 
   return (
@@ -55,17 +55,16 @@ function App() {
           currentVariable={currentVariable}
           setCurrentVariable={setCurrentVariable}
           expression={expression}
-          formula={formula}
         />
         <Calculator
           expression={expression}
           setExpression={setExpression}
-          setFormula={setFormula}
+          setComputedFormula={setComputedFormula}
           currentVariable={currentVariable}
         />
         <Formulas
-          formula={formula.displayedFormula}
-          result={formula.result}
+          computedFormula={computedFormula.computedFormula}
+          computedResult={computedFormula.computedResult}
           currentVariable={currentVariable}
         />
       </div>
