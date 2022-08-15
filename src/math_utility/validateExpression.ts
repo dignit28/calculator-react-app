@@ -120,9 +120,10 @@ export function validateExpression(expression: string): boolean {
         case "/":
         case "^":
           if (
-            prevToken.tokenType !== ExpressionTokenType.NUMBER &&
-            prevToken.tokenType !== ExpressionTokenType.RIGHT_PARENTHESIS &&
-            prevToken.tokenType !== ExpressionTokenType.VARIABLE
+            prevToken.tokenType === ExpressionTokenType.BEGINNING ||
+            prevToken.tokenType === ExpressionTokenType.OPERATOR ||
+            prevToken.tokenType === ExpressionTokenType.LEFT_PARENTHESIS ||
+            prevToken.tokenType === ExpressionTokenType.DECIMAL_POINT
           ) {
             throw new Error(
               "Binary operator must be after a number, variable or a right parenthesis"
@@ -139,7 +140,7 @@ export function validateExpression(expression: string): boolean {
             prevToken.tokenType === ExpressionTokenType.VARIABLE
           ) {
             throw new Error(
-              "Left parenthesis can't be after a number, variable, decimal point of right parenthesis"
+              "Left parenthesis can't be after a number, variable, decimal point or right parenthesis"
             );
           }
           openingParenthesis++;
@@ -150,8 +151,11 @@ export function validateExpression(expression: string): boolean {
           if (openingParenthesis <= 0) {
             throw new Error("Detected non matching parenthesis");
           } else if (
-            prevToken.tokenType !== ExpressionTokenType.NUMBER &&
-            prevToken.tokenType !== ExpressionTokenType.VARIABLE
+            prevToken.tokenType === ExpressionTokenType.BEGINNING ||
+            prevToken.tokenType === ExpressionTokenType.OPERATOR ||
+            prevToken.tokenType === ExpressionTokenType.LEFT_PARENTHESIS ||
+            prevToken.tokenType === ExpressionTokenType.RIGHT_PARENTHESIS ||
+            prevToken.tokenType === ExpressionTokenType.DECIMAL_POINT
           ) {
             throw new Error(
               "Right parenthesis must be after a number or a variable"
@@ -209,9 +213,10 @@ export function validateExpression(expression: string): boolean {
       throw new Error("Detected non matching parenthesis");
     }
     if (
-      prevToken.tokenType !== ExpressionTokenType.RIGHT_PARENTHESIS &&
-      prevToken.tokenType !== ExpressionTokenType.NUMBER &&
-      prevToken.tokenType !== ExpressionTokenType.VARIABLE
+      prevToken.tokenType === ExpressionTokenType.BEGINNING ||
+      prevToken.tokenType === ExpressionTokenType.OPERATOR ||
+      prevToken.tokenType === ExpressionTokenType.LEFT_PARENTHESIS ||
+      prevToken.tokenType === ExpressionTokenType.DECIMAL_POINT
     ) {
       throw new Error(
         "expression must end with a right parenthesis, variable or a number"
