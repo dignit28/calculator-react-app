@@ -100,19 +100,25 @@ export function validateExpression(expression: string): boolean {
   let openingParenthesis: number = 0;
 
   interface Token {
+    value: string;
     tokenType: ExpressionTokenType;
     decimalPointUsed: Boolean;
+    numberStart: Boolean;
   }
 
   let prevToken: Token = {
+    value: "",
     tokenType: ExpressionTokenType.BEGINNING,
     decimalPointUsed: false,
+    numberStart: false,
   };
+
   try {
     arrayedExpression.forEach((token: string) => {
       switch (token) {
         case "-":
           prevToken.tokenType = ExpressionTokenType.OPERATOR;
+          prevToken.numberStart = false;
           prevToken.decimalPointUsed = false;
           break;
         case "+":
@@ -130,6 +136,7 @@ export function validateExpression(expression: string): boolean {
             );
           }
           prevToken.tokenType = ExpressionTokenType.OPERATOR;
+          prevToken.numberStart = false;
           prevToken.decimalPointUsed = false;
           break;
         case "(":
@@ -145,6 +152,7 @@ export function validateExpression(expression: string): boolean {
           }
           openingParenthesis++;
           prevToken.tokenType = ExpressionTokenType.LEFT_PARENTHESIS;
+          prevToken.numberStart = false;
           prevToken.decimalPointUsed = false;
           break;
         case ")":
@@ -163,6 +171,7 @@ export function validateExpression(expression: string): boolean {
           }
           openingParenthesis--;
           prevToken.tokenType = ExpressionTokenType.RIGHT_PARENTHESIS;
+          prevToken.numberStart = false;
           prevToken.decimalPointUsed = false;
           break;
         case ".":
@@ -172,6 +181,7 @@ export function validateExpression(expression: string): boolean {
             throw new Error("Decimal point must be between numbers");
           }
           prevToken.tokenType = ExpressionTokenType.DECIMAL_POINT;
+          prevToken.numberStart = false;
           prevToken.decimalPointUsed = true;
           break;
         case "0":
@@ -184,6 +194,13 @@ export function validateExpression(expression: string): boolean {
         case "7":
         case "8":
         case "9":
+          // Check for presence of leading zeroes
+          if (prevToken.value === "0" && prevToken.numberStart === true) {
+            throw new Error(
+              "Can't start number with zero unless it's in format of '0.123***'"
+            );
+          }
+          // Check for expression formatting
           if (
             prevToken.tokenType === ExpressionTokenType.RIGHT_PARENTHESIS ||
             prevToken.tokenType === ExpressionTokenType.VARIABLE
@@ -192,6 +209,15 @@ export function validateExpression(expression: string): boolean {
               "Number can't be after right parenthesis or variable"
             );
           }
+          if (
+            prevToken.tokenType !== ExpressionTokenType.NUMBER &&
+            prevToken.tokenType !== ExpressionTokenType.DECIMAL_POINT
+          ) {
+            prevToken.numberStart = true;
+          } else {
+            prevToken.numberStart = false;
+          }
+
           prevToken.tokenType = ExpressionTokenType.NUMBER;
           break;
         default:
@@ -206,8 +232,11 @@ export function validateExpression(expression: string): boolean {
             );
           }
           prevToken.tokenType = ExpressionTokenType.VARIABLE;
+          prevToken.numberStart = false;
+          prevToken.decimalPointUsed = true;
           break;
       }
+      prevToken.value = token;
     });
     if (openingParenthesis !== 0) {
       throw new Error("Detected non matching parenthesis");
