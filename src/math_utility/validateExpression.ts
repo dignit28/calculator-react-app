@@ -162,11 +162,10 @@ export function validateExpression(expression: string): boolean {
             prevToken.tokenType === ExpressionTokenType.BEGINNING ||
             prevToken.tokenType === ExpressionTokenType.OPERATOR ||
             prevToken.tokenType === ExpressionTokenType.LEFT_PARENTHESIS ||
-            prevToken.tokenType === ExpressionTokenType.RIGHT_PARENTHESIS ||
             prevToken.tokenType === ExpressionTokenType.DECIMAL_POINT
           ) {
             throw new Error(
-              "Right parenthesis must be after a number or a variable"
+              "Right parenthesis must be after a number, variable or another right parenthesis"
             );
           }
           openingParenthesis--;
