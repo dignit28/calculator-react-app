@@ -5,3 +5,10 @@ export const CalculatorWrapper = styled.div`
   flex-direction: column;
   max-width: 500px;
 `;
+
+export const ButtonsWrapper = styled.div`
+  padding-top: 5px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 5px;
+`;

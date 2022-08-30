@@ -1,6 +1,6 @@
 import React from "react";
 // Styles
-import { CalculatorWrapper } from "./Calculator.styles";
+import { CalculatorWrapper, ButtonsWrapper } from "./Calculator.styles";
 // Functions
 import {
   validateExpression,
@@ -171,7 +171,7 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
         onClick={handleInputClick}
         value={props.expression.displayedValue}
       />
-      {buttonElements}
+      <ButtonsWrapper>{buttonElements}</ButtonsWrapper>
     </CalculatorWrapper>
   );
 };
