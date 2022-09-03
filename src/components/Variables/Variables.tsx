@@ -23,6 +23,14 @@ const Variables: React.FC<VariablesProps> = (props) => {
   const [deleteDialogueIsShown, setDeleteDialogueIsShown] =
     React.useState(false);
 
+  React.useEffect(() => {
+    if (editIsShown === true || deleteDialogueIsShown === true) {
+      const confirmButton: HTMLButtonElement =
+        document.querySelector(".confirm-button")!;
+      confirmButton.focus();
+    }
+  }, [editIsShown, deleteDialogueIsShown]);
+
   const openEditForm = (event: React.MouseEvent) => {
     setEditIsShown(true);
     setCursorClickPosition([event.clientX, event.clientY]);
@@ -107,7 +115,7 @@ const Variables: React.FC<VariablesProps> = (props) => {
   });
 
   return (
-    <div onKeyDown={onKeyDown}>
+    <div>
       <div>
         {variableElements}
         <button onClick={(event) => newVariable(event)}>+</button>
