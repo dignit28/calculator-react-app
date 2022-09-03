@@ -3,7 +3,6 @@ import styled from "styled-components";
 type EditFormWrapperProps = {
   cursorX: number;
   cursorY: number;
-  onSubmit: React.FormEventHandler<HTMLFormElement>;
 };
 
 type DeleteDialogueWrapperProps = {

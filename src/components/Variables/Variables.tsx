@@ -23,13 +23,6 @@ const Variables: React.FC<VariablesProps> = (props) => {
   const [deleteDialogueIsShown, setDeleteDialogueIsShown] =
     React.useState(false);
 
-  React.useEffect(() => {
-    if (editIsShown === true) {
-      const editForm: HTMLFormElement = document.querySelector(".edit-form")!;
-      editForm!.focus();
-    }
-  }, [editIsShown]);
-
   const openEditForm = (event: React.MouseEvent) => {
     setEditIsShown(true);
     setCursorClickPosition([event.clientX, event.clientY]);

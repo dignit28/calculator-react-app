@@ -19,6 +19,10 @@ const DeleteDialogue: React.FC<DeleteDialogueProps> = (props) => {
       <DeleteDialogueWrapper
         cursorX={props.position[0]}
         cursorY={props.position[1]}
+        onKeyDown={props.onKeyDown}
+        onMouseDown={(e) => {
+          e.preventDefault();
+        }}
       >
         <button>Cancel</button>
         <button className="confirm-button">Confirm</button>

@@ -163,6 +163,10 @@ const EditForm: React.FC<EditFormProps> = (props) => {
         cursorX={props.position[0]}
         cursorY={props.position[1]}
         onSubmit={props.formType === "new" ? createNewVariable : editVariable}
+        onKeyDown={props.onKeyDown}
+        onMouseDown={(e) => {
+          e.preventDefault();
+        }}
       >
         <p>Variable Name</p>
         <input
@@ -171,6 +175,9 @@ const EditForm: React.FC<EditFormProps> = (props) => {
           name="variableName"
           onChange={handleChange}
           value={formData.variableName}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+          }}
         />
         <p>Variable Comment</p>
         <input
@@ -179,8 +186,13 @@ const EditForm: React.FC<EditFormProps> = (props) => {
           name="variableComment"
           onChange={handleChange}
           value={formData.variableComment}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+          }}
         />
-        <button className="confirm-button">{props.formType === "new" ? "Create" : "Edit"}</button>
+        <button className="confirm-button">
+          {props.formType === "new" ? "Create" : "Edit"}
+        </button>
       </EditFormWrapper>
     </FocusTrap>
   );
