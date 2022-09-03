@@ -38,13 +38,9 @@ const EditForm: React.FC<EditFormProps> = (props) => {
   }
 
   const closeFormCleanup = (variableName: string) => {
-    console.log("HERE7");
     props.updateVariables();
-    console.log("HERE8");
     props.setCurrentVariable(variableName);
-    console.log("HERE9");
     props.closeEditForm();
-    console.log("HERE10");
   };
 
   const createNewVariable = (event: React.FormEvent) => {
@@ -87,7 +83,6 @@ const EditForm: React.FC<EditFormProps> = (props) => {
     // Check if variable name is correct and not banned for use
     const newVariableName = formData.variableName;
     const newVariableComment = formData.variableComment;
-    console.log(newVariableComment);
     if (
       newVariableName.match(/^[a-z]$/i) &&
       !BANNED_VARIABLE_NAMES.includes(newVariableName)
@@ -100,18 +95,15 @@ const EditForm: React.FC<EditFormProps> = (props) => {
         !existingVariables.includes(newVariableName) ||
         newVariableName === props.assignedVariable
       ) {
-        console.log("HERE");
         // If variable name is correct, start editing process
         // Iterate over every variable to fix dependencies
         existingVariables.forEach((variable) => {
-          console.log("HERE2");
           const variableData = saveData[0][findVariableIndex(variable)];
           const childrenOfVariable = variableData.variableChildren;
           // If the changing variable is in child list of current variable,
           // Rewrite current variable's data with new variable name
           const childIndex = childrenOfVariable.indexOf(props.assignedVariable);
           if (childIndex !== -1) {
-            console.log("HERE3");
             // Rewrite children array
             variableData.variableChildren[childIndex] = newVariableName;
             // Rewrite input data
@@ -150,17 +142,14 @@ const EditForm: React.FC<EditFormProps> = (props) => {
           }
         });
         // After editing dependent variables, fix the variable itself
-        console.log("HERE6");
         saveData[0][findVariableIndex(props.assignedVariable)].variableComment =
           newVariableComment;
         saveData[0][findVariableIndex(props.assignedVariable)].variableName =
           newVariableName;
 
         closeFormCleanup(newVariableName);
-        console.log("HERE11");
       }
     }
-    console.log("HERE12");
   };
 
   return (

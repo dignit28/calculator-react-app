@@ -38,9 +38,10 @@ function App() {
   const [expression, setExpression] = React.useState<ExpressionState>(
     saveData[0][currentVariableIndex].inputData
   );
-  const [computedFormula, setComputedFormula] = React.useState<ComputedFormulaState>(
-    saveData[0][currentVariableIndex].computedData
-  );
+  const [computedFormula, setComputedFormula] =
+    React.useState<ComputedFormulaState>(
+      saveData[0][currentVariableIndex].computedData
+    );
 
   React.useEffect(() => {
     setExpression(saveData[0][currentVariableIndex].inputData);
@@ -66,6 +67,7 @@ function App() {
           computedFormula={computedFormula.computedFormula}
           computedResult={computedFormula.computedResult}
           currentVariable={currentVariable}
+          currentVariableIndex={currentVariableIndex}
         />
       </div>
     </MathJaxContext>
