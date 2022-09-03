@@ -1,6 +1,6 @@
 import React from "react";
 // Styles
-import { EditFormWrapper, FocusTrap } from "./EditForm.styles";
+import { EditFormWrapper, FocusTrap } from "./Variables.styles";
 // Functions
 import { findVariableIndex } from "../../data/saveData";
 // Data
@@ -159,6 +159,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
       onMouseDown={props.onClickOutside}
     >
       <EditFormWrapper
+        className="edit-form"
         cursorX={props.position[0]}
         cursorY={props.position[1]}
         onSubmit={props.formType === "new" ? createNewVariable : editVariable}
@@ -179,7 +180,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
           onChange={handleChange}
           value={formData.variableComment}
         />
-        <button>{props.formType === "new" ? "Create" : "Edit"}</button>
+        <button className="confirm-button">{props.formType === "new" ? "Create" : "Edit"}</button>
       </EditFormWrapper>
     </FocusTrap>
   );

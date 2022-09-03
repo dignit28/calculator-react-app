@@ -2,6 +2,7 @@ import React from "react";
 import { saveData, updateInputData } from "../../data/saveData";
 import { ExpressionState } from "../../App";
 import EditForm from "./EditForm";
+import DeleteDialogue from "./DeleteDialogue";
 // Interfaces
 import { VariableData } from "../../data/saveData";
 
@@ -18,6 +19,16 @@ const Variables: React.FC<VariablesProps> = (props) => {
   const [cursorClickPosition, setCursorClickPosition] = React.useState<
     [number, number]
   >([0, 0]);
+  const [variables, setVariables] = React.useState<VariableData[]>(saveData[0]);
+  const [deleteDialogueIsShown, setDeleteDialogueIsShown] =
+    React.useState(false);
+
+  React.useEffect(() => {
+    if (editIsShown === true) {
+      const editForm: HTMLFormElement = document.querySelector(".edit-form")!;
+      editForm!.focus();
+    }
+  }, [editIsShown]);
 
   const openEditForm = (event: React.MouseEvent) => {
     setEditIsShown(true);
@@ -28,18 +39,38 @@ const Variables: React.FC<VariablesProps> = (props) => {
     setEditIsShown(false);
   };
 
+  const openDeleteVariableDialogue = (event: React.MouseEvent) => {
+    setDeleteDialogueIsShown(true);
+    setCursorClickPosition([event.clientX, event.clientY]);
+  };
+
+  const closeDeleteVariableDialogue = () => {
+    setDeleteDialogueIsShown(false);
+  };
+
   const onKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === "Escape") {
-      closeEditForm();
+    switch (event.key) {
+      case "Escape":
+        closeEditForm();
+        closeDeleteVariableDialogue();
+        break;
+      case "Enter":
+        event.preventDefault();
+        console.log("Enter memes");
+        const confirmButton: HTMLButtonElement =
+          document.querySelector(".confirm-button")!;
+        confirmButton.click();
+        break;
     }
   };
 
   const onClickOutside = (event: React.SyntheticEvent<HTMLElement>) => {
     const target = event.target as HTMLElement;
-    if (target.classList.contains("focus-trap")) closeEditForm();
+    if (target.classList.contains("focus-trap")) {
+      closeEditForm();
+      closeDeleteVariableDialogue();
+    }
   };
-
-  const [variables, setVariables] = React.useState<VariableData[]>(saveData[0]);
 
   const updateVariables = () => {
     setVariables(saveData[0]);
@@ -64,6 +95,7 @@ const Variables: React.FC<VariablesProps> = (props) => {
 
   const deleteVariable = (event: React.MouseEvent) => {
     event.stopPropagation();
+    openDeleteVariableDialogue(event);
   };
 
   const variableElements = variables.map((variable) => {
@@ -97,6 +129,14 @@ const Variables: React.FC<VariablesProps> = (props) => {
           updateVariables={updateVariables}
           closeEditForm={closeEditForm}
           setCurrentVariable={props.setCurrentVariable}
+        />
+      )}
+      {deleteDialogueIsShown && (
+        <DeleteDialogue
+          onKeyDown={onKeyDown}
+          onClickOutside={onClickOutside}
+          position={cursorClickPosition}
+          closeDeleteVariableDialogue={closeDeleteVariableDialogue}
         />
       )}
     </div>
