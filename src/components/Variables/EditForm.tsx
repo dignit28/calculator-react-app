@@ -134,6 +134,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
                     if (token !== "caret") {
                       return true;
                     }
+                    return false;
                   })
                   .join("");
             } // if user changed input, don't change it's values

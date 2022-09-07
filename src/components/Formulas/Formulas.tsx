@@ -13,6 +13,7 @@ import { CurrentVariableState } from "../../App";
 type FormulasProps = {
   computedFormula: string;
   computedResult: string;
+  currentSave: number;
   currentVariable: CurrentVariableState;
 };
 

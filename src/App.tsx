@@ -34,6 +34,8 @@ export type ComputedFormulaState = {
 };
 
 function App() {
+  const [currentSave, setCurrentSave] = React.useState<number>(0);
+
   const [currentVariable, setCurrentVariable] =
     React.useState<CurrentVariableState>({
       name: saveData[0][0].variableName,
@@ -52,18 +54,21 @@ function App() {
   return (
     <MathJaxContext config={config}>
       <div className="page">
-        {/* <Saves /> */}
+        <Saves currentSave={currentSave} setCurrentSave={setCurrentSave} />
         <Variables
           currentVariable={currentVariable}
+          currentSave={currentSave}
           setCurrentVariable={setCurrentVariable}
         />
         <Calculator
           setComputedFormula={setComputedFormula}
+          currentSave={currentSave}
           currentVariable={currentVariable}
         />
         <Formulas
           computedFormula={computedFormula.computedFormula}
           computedResult={computedFormula.computedResult}
+          currentSave={currentSave}
           currentVariable={currentVariable}
         />
       </div>

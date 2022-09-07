@@ -27,6 +27,7 @@ type CalculatorProps = {
   setComputedFormula: React.Dispatch<
     React.SetStateAction<ComputedFormulaState>
   >;
+  currentSave: number;
   currentVariable: CurrentVariableState;
 };
 

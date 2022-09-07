@@ -4,7 +4,6 @@ import {
   saveData,
   updateInputData,
 } from "../../data/saveData";
-import { ExpressionState } from "../../App";
 import EditForm from "./EditForm";
 import DeleteDialogue from "./DeleteDialogue";
 // Interfaces
@@ -14,6 +13,7 @@ import { CurrentVariableState } from "../../App";
 
 type VariablesProps = {
   currentVariable: CurrentVariableState;
+  currentSave: number;
   setCurrentVariable: React.Dispatch<
     React.SetStateAction<CurrentVariableState>
   >;
@@ -135,6 +135,7 @@ const Variables: React.FC<VariablesProps> = (props) => {
 
   return (
     <div>
+      <p>Variables</p>
       <div>
         {variableElements}
         <button onClick={(event) => newVariable(event)}>+</button>
