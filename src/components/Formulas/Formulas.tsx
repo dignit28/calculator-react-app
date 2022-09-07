@@ -1,4 +1,5 @@
 import React from "react";
+import { v4 as uuidv4 } from "uuid";
 import { MathJax } from "better-react-mathjax";
 // Functions
 import { findVariableIndex } from "../../data/saveData";
@@ -6,12 +7,13 @@ import { findVariableIndex } from "../../data/saveData";
 import { saveData } from "../../data/saveData";
 // Styles
 import ChildVariablesWrapper from "./Formulas.styles";
+//Types
+import { CurrentVariableState } from "../../App";
 
 type FormulasProps = {
   computedFormula: string;
   computedResult: string;
-  currentVariable: string;
-  currentVariableIndex: number;
+  currentVariable: CurrentVariableState;
 };
 
 const fixASCIIMathRendering = (expression: string) => {
@@ -24,25 +26,25 @@ const fixASCIIMathRendering = (expression: string) => {
 
 const Formulas: React.FC<FormulasProps> = React.memo((props) => {
   const childVariableElements = saveData[0][
-    props.currentVariableIndex
+    props.currentVariable.index
   ].variableChildren.map((childVariable) => {
     const variableComment =
       saveData[0][findVariableIndex(childVariable)].variableComment;
     return (
-      <li>
+      <li key={uuidv4()}>
         {childVariable} - {variableComment}
       </li>
     );
   });
 
   return props.computedResult === "Invalid input" ? (
-    <span>Invalid input</span>
+    <p>Invalid input</p>
   ) : (
     <div>
       <div>
         <MathJax inline dynamic>
           {`$
-      ${props.computedFormula === "" ? "" : props.currentVariable + "="}
+      ${props.computedFormula === "" ? "" : props.currentVariable.name + "="}
       ${fixASCIIMathRendering(props.computedFormula)}
       ${props.computedFormula === "" ? "" : "="}
       ${fixASCIIMathRendering(props.computedResult)}

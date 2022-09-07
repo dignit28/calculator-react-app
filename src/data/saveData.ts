@@ -105,3 +105,42 @@ export const findVariableIndex = (variable: string) => {
 
   return variableIndex !== -1 ? variableIndex : 0;
 };
+
+export const getParentVariables = (variable: string) => {
+  // This function will create array of dependent variables in the order
+  // that is needed for correct evaluation
+  const currentSaveVariables = saveData[0].map((variableData) => {
+    return variableData.variableName;
+  });
+
+  const parentsArrayWithDuplicates: string[] = [];
+
+  const addParentsToArray = (childVariable: string) => {
+    currentSaveVariables.forEach((parentVariable) => {
+      if (
+        saveData[0][
+          findVariableIndex(parentVariable)
+        ].variableChildren.includes(childVariable)
+      ) {
+        parentsArrayWithDuplicates.push(parentVariable);
+        addParentsToArray(parentVariable);
+      }
+    });
+  };
+
+  addParentsToArray(variable);
+
+  // Now create array without duplicates by popping the one with duplicates
+  // That way least dependent, lower-order variables will be evaluated first
+  // And higher-order variables will be evaluated last
+  const parentsArray: string[] = [];
+
+  while (parentsArrayWithDuplicates.length !== 0) {
+    const poppedParent = parentsArrayWithDuplicates.pop();
+    if (!parentsArray.includes(poppedParent!)) {
+      parentsArray.unshift(poppedParent!);
+    }
+  }
+  
+  return parentsArray;
+}

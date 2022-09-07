@@ -6,6 +6,8 @@ import { findVariableIndex } from "../../data/saveData";
 // Data
 import { saveData } from "../../data/saveData";
 import { BANNED_VARIABLE_NAMES } from "../../data/bannedVariableNames";
+//Types
+import { CurrentVariableState } from "../../App";
 
 type EditFormProps = {
   formType: string;
@@ -15,7 +17,9 @@ type EditFormProps = {
   position: [number, number];
   updateVariables: () => void;
   closeEditForm: () => void;
-  setCurrentVariable: React.Dispatch<React.SetStateAction<string>>;
+  setCurrentVariable: React.Dispatch<
+    React.SetStateAction<CurrentVariableState>
+  >;
 };
 
 const EditForm: React.FC<EditFormProps> = (props) => {
@@ -39,7 +43,10 @@ const EditForm: React.FC<EditFormProps> = (props) => {
 
   const closeFormCleanup = (variableName: string) => {
     props.updateVariables();
-    props.setCurrentVariable(variableName);
+    props.setCurrentVariable({
+      name: variableName,
+      index: findVariableIndex(variableName),
+    });
     props.closeEditForm();
   };
 
@@ -148,7 +155,11 @@ const EditForm: React.FC<EditFormProps> = (props) => {
           newVariableName;
 
         closeFormCleanup(newVariableName);
+      } else {
+        console.log("Variable with the same name already exists");
       }
+    } else {
+      console.log("Bad variable name");
     }
   };
 
@@ -163,7 +174,6 @@ const EditForm: React.FC<EditFormProps> = (props) => {
         cursorX={props.position[0]}
         cursorY={props.position[1]}
         onSubmit={props.formType === "new" ? createNewVariable : editVariable}
-        onKeyDown={props.onKeyDown}
         onMouseDown={(e) => {
           e.preventDefault();
         }}

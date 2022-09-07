@@ -18,6 +18,11 @@ const config = {
   },
 };
 
+export type CurrentVariableState = {
+  name: string;
+  index: number;
+};
+
 export type ExpressionState = {
   displayedValue: string;
   arrayValue: string[];
@@ -29,24 +34,24 @@ export type ComputedFormulaState = {
 };
 
 function App() {
-  const [currentVariable, setCurrentVariable] = React.useState<string>(
-    saveData[0][0].variableName
-  );
-
-  const currentVariableIndex = findVariableIndex(currentVariable);
+  const [currentVariable, setCurrentVariable] =
+    React.useState<CurrentVariableState>({
+      name: saveData[0][0].variableName,
+      index: findVariableIndex(saveData[0][0].variableName),
+    });
 
   const [expression, setExpression] = React.useState<ExpressionState>(
-    saveData[0][currentVariableIndex].inputData
+    saveData[0][currentVariable.index].inputData
   );
   const [computedFormula, setComputedFormula] =
     React.useState<ComputedFormulaState>(
-      saveData[0][currentVariableIndex].computedData
+      saveData[0][currentVariable.index].computedData
     );
 
   React.useEffect(() => {
-    setExpression(saveData[0][currentVariableIndex].inputData);
-    setComputedFormula(saveData[0][currentVariableIndex].computedData);
-  }, [currentVariableIndex]);
+    setExpression(saveData[0][currentVariable.index].inputData);
+    setComputedFormula(saveData[0][currentVariable.index].computedData);
+  }, [currentVariable]);
 
   return (
     <MathJaxContext config={config}>
@@ -67,7 +72,6 @@ function App() {
           computedFormula={computedFormula.computedFormula}
           computedResult={computedFormula.computedResult}
           currentVariable={currentVariable}
-          currentVariableIndex={currentVariableIndex}
         />
       </div>
     </MathJaxContext>

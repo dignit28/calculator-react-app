@@ -8,14 +8,20 @@ import {
 } from "../../math_utility/validateExpression";
 import {
   updateInputData,
+  updateFormulaData,
   saveData,
   findVariableIndex,
+  getParentVariables,
 } from "../../data/saveData";
 import evaluateVariable from "../../math_utility/evaluateVariable";
 // Data
 import buttons from "../../data/buttons";
 // Types
-import { ExpressionState, ComputedFormulaState } from "../../App";
+import {
+  ExpressionState,
+  ComputedFormulaState,
+  CurrentVariableState,
+} from "../../App";
 
 type CalculatorProps = {
   expression: ExpressionState;
@@ -23,7 +29,7 @@ type CalculatorProps = {
   setComputedFormula: React.Dispatch<
     React.SetStateAction<ComputedFormulaState>
   >;
-  currentVariable: string;
+  currentVariable: CurrentVariableState;
 };
 
 const Calculator: React.FC<CalculatorProps> = (props) => {
@@ -49,51 +55,18 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
         const expressionToCalculate = inputField!.value;
         if (
           validateExpression(expressionToCalculate) &&
-          validateVariables(props.currentVariable, expressionToCalculate)
+          validateVariables(props.currentVariable.name, expressionToCalculate)
         ) {
           const resultingFormula = evaluateVariable(
-            props.currentVariable,
+            props.currentVariable.name,
             expressionToCalculate
           );
-          // After evaluation finished, evaluate dependent variables
-          // First add every parent of every dependent variable into array using recursion
-          // Duplicate variables will be removed later
-          const currentSaveVariables = saveData[0].map((variableData) => {
-            return variableData.variableName;
-          });
-          const evaluationArrayWithDuplicates: string[] = [];
-          const addParentsToArray = (childVariable: string) => {
-            currentSaveVariables.forEach((parentVariable) => {
-              if (
-                saveData[0][
-                  findVariableIndex(parentVariable)
-                ].variableChildren.includes(childVariable)
-              ) {
-                evaluationArrayWithDuplicates.push(parentVariable);
-                addParentsToArray(parentVariable);
-              }
-            });
-          };
 
-          addParentsToArray(props.currentVariable);
+          const evaluationArray = getParentVariables(
+            props.currentVariable.name
+          );
+          console.log(evaluationArray);
 
-          console.log("EVAL Q DUPL ", evaluationArrayWithDuplicates);
-
-          // Now create array without duplicates by popping the one with duplicates
-          // That way least dependent, lower-order variables will be evaluated first
-          // And higher-order variables will be evaluated last
-          const evaluationArray: string[] = [];
-
-          while (evaluationArrayWithDuplicates.length !== 0) {
-            const poppedParent = evaluationArrayWithDuplicates.pop();
-            if (!evaluationArray.includes(poppedParent!)) {
-              evaluationArray.unshift(poppedParent!);
-            }
-          }
-
-          console.log("EVAL Q ", evaluationArray);
-
-          // Finally evaluate every dependent variable in order
           while (evaluationArray.length !== 0) {
             const currentVariable = evaluationArray.shift();
             evaluateVariable(
@@ -103,17 +76,16 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
             );
           }
 
-          // Lastly, update current formula state
           props.setComputedFormula(resultingFormula);
         } else {
-          props.setComputedFormula((prevComputedFormula) => {
-            return {
-              ...prevComputedFormula,
-              result: "Invalid input",
-            };
-          });
+          const invalidFormulaData = {
+            computedFormula: "Invalid input",
+            computedResult: "Invalid input",
+          };
+          updateFormulaData(0, props.currentVariable.name, invalidFormulaData);
+          props.setComputedFormula(invalidFormulaData);
         }
-        updateInputData(0, props.currentVariable, props.expression);
+        updateInputData(0, props.currentVariable.name, props.expression);
         break;
       default: // Add input
         props.setExpression((prevExpression) => {

@@ -1,14 +1,22 @@
 import React from "react";
-import { saveData, updateInputData } from "../../data/saveData";
+import {
+  findVariableIndex,
+  saveData,
+  updateInputData,
+} from "../../data/saveData";
 import { ExpressionState } from "../../App";
 import EditForm from "./EditForm";
 import DeleteDialogue from "./DeleteDialogue";
 // Interfaces
 import { VariableData } from "../../data/saveData";
+// Types
+import { CurrentVariableState } from "../../App";
 
 type VariablesProps = {
-  currentVariable: string;
-  setCurrentVariable: React.Dispatch<React.SetStateAction<string>>;
+  currentVariable: CurrentVariableState;
+  setCurrentVariable: React.Dispatch<
+    React.SetStateAction<CurrentVariableState>
+  >;
   expression: ExpressionState;
 };
 
@@ -52,6 +60,7 @@ const Variables: React.FC<VariablesProps> = (props) => {
   const onKeyDown = (event: React.KeyboardEvent) => {
     switch (event.key) {
       case "Escape":
+        console.log("Escape memes");
         closeEditForm();
         closeDeleteVariableDialogue();
         break;
@@ -78,8 +87,12 @@ const Variables: React.FC<VariablesProps> = (props) => {
   };
 
   const handleButtonClick = (variable: string) => {
-    updateInputData(0, props.currentVariable, props.expression);
-    props.setCurrentVariable(variable);
+    updateInputData(0, props.currentVariable.name, props.expression);
+    props.setCurrentVariable({
+      name: variable,
+      index: findVariableIndex(variable),
+    });
+    console.log(saveData[0][findVariableIndex(variable)].variableChildren);
   };
 
   const newVariable = (event: React.MouseEvent) => {
@@ -94,8 +107,9 @@ const Variables: React.FC<VariablesProps> = (props) => {
     openEditForm(event);
   };
 
-  const deleteVariable = (event: React.MouseEvent) => {
+  const deleteVariable = (event: React.MouseEvent, variable: string) => {
     event.stopPropagation();
+    setAssignedFormVariable(variable);
     openDeleteVariableDialogue(event);
   };
 
@@ -109,7 +123,11 @@ const Variables: React.FC<VariablesProps> = (props) => {
         <button onClick={(event) => editVariable(event, variable.variableName)}>
           E
         </button>
-        <button onClick={deleteVariable}>D</button>
+        <button
+          onClick={(event) => deleteVariable(event, variable.variableName)}
+        >
+          D
+        </button>
       </button>
     );
   });
@@ -134,10 +152,14 @@ const Variables: React.FC<VariablesProps> = (props) => {
       )}
       {deleteDialogueIsShown && (
         <DeleteDialogue
+          assignedVariable={assignedFormVariable}
           onKeyDown={onKeyDown}
           onClickOutside={onClickOutside}
           position={cursorClickPosition}
+          updateVariables={updateVariables}
           closeDeleteVariableDialogue={closeDeleteVariableDialogue}
+          currentVariable={props.currentVariable}
+          setCurrentVariable={props.setCurrentVariable}
         />
       )}
     </div>
