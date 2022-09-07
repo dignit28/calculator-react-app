@@ -60,13 +60,13 @@ export const updateSaveData = (
 export const updateInputData = (
   save: number,
   variable: string,
-  newInputData: ExpressionState
+  newInputValue: string
 ) => {
-  const newArrayValue = newInputData.displayedValue.split("");
+  const newArrayValue = newInputValue.split("");
   newArrayValue.push("caret");
 
   saveData[save][findVariableIndex(variable)].inputData = {
-    displayedValue: newInputData.displayedValue,
+    displayedValue: newInputValue,
     arrayValue: newArrayValue,
   };
 };

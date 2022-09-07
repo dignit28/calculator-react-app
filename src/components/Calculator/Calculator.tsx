@@ -24,8 +24,6 @@ import {
 } from "../../App";
 
 type CalculatorProps = {
-  expression: ExpressionState;
-  setExpression: React.Dispatch<React.SetStateAction<ExpressionState>>;
   setComputedFormula: React.Dispatch<
     React.SetStateAction<ComputedFormulaState>
   >;
@@ -33,6 +31,14 @@ type CalculatorProps = {
 };
 
 const Calculator: React.FC<CalculatorProps> = (props) => {
+  const [expression, setExpression] = React.useState<ExpressionState>(
+    saveData[0][props.currentVariable.index].inputData
+  );
+
+  React.useEffect(() => {
+    setExpression(saveData[0][props.currentVariable.index].inputData);
+  }, [props.currentVariable]);
+
   const inputField: HTMLInputElement | null =
     document.querySelector(".calculator-input");
 
@@ -43,7 +49,7 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
     );
     const newArrayValue: string[] = newDisplayedValue.split("");
     newArrayValue.splice(event.target.selectionStart!, 0, "caret");
-    props.setExpression({
+    setExpression({
       arrayValue: newArrayValue,
       displayedValue: newDisplayedValue,
     });
@@ -85,10 +91,14 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
           updateFormulaData(0, props.currentVariable.name, invalidFormulaData);
           props.setComputedFormula(invalidFormulaData);
         }
-        updateInputData(0, props.currentVariable.name, props.expression);
+        updateInputData(
+          0,
+          props.currentVariable.name,
+          expression.displayedValue
+        );
         break;
       default: // Add input
-        props.setExpression((prevExpression) => {
+        setExpression((prevExpression) => {
           const newArrayValue: string[] = [...prevExpression.arrayValue];
           newArrayValue.splice(
             prevExpression.arrayValue.indexOf("caret"),
@@ -111,7 +121,7 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
     event: React.SyntheticEvent<HTMLInputElement>
   ): void => {
     const target = event.target as HTMLInputElement;
-    props.setExpression((prevExpression) => {
+    setExpression((prevExpression) => {
       if (typeof target.selectionStart === "number") {
         const newArrayValue: string[] = prevExpression.arrayValue.filter(
           (element: string) => element !== "caret"
@@ -141,7 +151,7 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
         className="calculator-input"
         onChange={handleChange}
         onClick={handleInputClick}
-        value={props.expression.displayedValue}
+        value={expression.displayedValue}
       />
       <ButtonsWrapper>{buttonElements}</ButtonsWrapper>
     </CalculatorWrapper>

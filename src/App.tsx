@@ -40,16 +40,12 @@ function App() {
       index: findVariableIndex(saveData[0][0].variableName),
     });
 
-  const [expression, setExpression] = React.useState<ExpressionState>(
-    saveData[0][currentVariable.index].inputData
-  );
   const [computedFormula, setComputedFormula] =
     React.useState<ComputedFormulaState>(
       saveData[0][currentVariable.index].computedData
     );
 
   React.useEffect(() => {
-    setExpression(saveData[0][currentVariable.index].inputData);
     setComputedFormula(saveData[0][currentVariable.index].computedData);
   }, [currentVariable]);
 
@@ -60,11 +56,8 @@ function App() {
         <Variables
           currentVariable={currentVariable}
           setCurrentVariable={setCurrentVariable}
-          expression={expression}
         />
         <Calculator
-          expression={expression}
-          setExpression={setExpression}
           setComputedFormula={setComputedFormula}
           currentVariable={currentVariable}
         />

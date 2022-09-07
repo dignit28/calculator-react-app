@@ -24,7 +24,7 @@ const fixASCIIMathRendering = (expression: string) => {
   return expression;
 };
 
-const Formulas: React.FC<FormulasProps> = React.memo((props) => {
+const Formulas: React.FC<FormulasProps> = (props) => {
   const childVariableElements = saveData[0][
     props.currentVariable.index
   ].variableChildren.map((childVariable) => {
@@ -54,6 +54,6 @@ const Formulas: React.FC<FormulasProps> = React.memo((props) => {
       <ChildVariablesWrapper>{childVariableElements}</ChildVariablesWrapper>
     </div>
   );
-});
+};
 
 export default Formulas;

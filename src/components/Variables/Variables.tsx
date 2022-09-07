@@ -17,7 +17,6 @@ type VariablesProps = {
   setCurrentVariable: React.Dispatch<
     React.SetStateAction<CurrentVariableState>
   >;
-  expression: ExpressionState;
 };
 
 const Variables: React.FC<VariablesProps> = (props) => {
@@ -87,7 +86,9 @@ const Variables: React.FC<VariablesProps> = (props) => {
   };
 
   const handleButtonClick = (variable: string) => {
-    updateInputData(0, props.currentVariable.name, props.expression);
+    const calculatorInputElement: HTMLInputElement = document.querySelector(".calculator-input")!;
+    const expression = calculatorInputElement.value;
+    updateInputData(0, props.currentVariable.name, expression);
     props.setCurrentVariable({
       name: variable,
       index: findVariableIndex(variable),
