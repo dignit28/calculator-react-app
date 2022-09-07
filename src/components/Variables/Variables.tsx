@@ -1,4 +1,5 @@
 import React from "react";
+import { v4 as uuidv4 } from "uuid";
 import {
   findVariableIndex,
   saveData,
@@ -26,7 +27,9 @@ const Variables: React.FC<VariablesProps> = (props) => {
   const [cursorClickPosition, setCursorClickPosition] = React.useState<
     [number, number]
   >([0, 0]);
-  const [variables, setVariables] = React.useState<VariableData[]>(saveData[0]);
+  const [variables, setVariables] = React.useState<VariableData[]>(
+    saveData[props.currentSave]
+  );
   const [deleteDialogueIsShown, setDeleteDialogueIsShown] =
     React.useState(false);
 
@@ -82,18 +85,23 @@ const Variables: React.FC<VariablesProps> = (props) => {
   };
 
   const updateVariables = () => {
-    setVariables(saveData[0]);
+    setVariables(saveData[props.currentSave]);
   };
 
   const handleButtonClick = (variable: string) => {
-    const calculatorInputElement: HTMLInputElement = document.querySelector(".calculator-input")!;
+    const calculatorInputElement: HTMLInputElement =
+      document.querySelector(".calculator-input")!;
     const expression = calculatorInputElement.value;
-    updateInputData(0, props.currentVariable.name, expression);
+    updateInputData(props.currentSave, props.currentVariable.name, expression);
     props.setCurrentVariable({
       name: variable,
-      index: findVariableIndex(variable),
+      index: findVariableIndex(props.currentSave, variable),
     });
-    console.log(saveData[0][findVariableIndex(variable)].variableChildren);
+    console.log(
+      saveData[props.currentSave][
+        findVariableIndex(props.currentSave, variable)
+      ].variableChildren
+    );
   };
 
   const newVariable = (event: React.MouseEvent) => {
@@ -117,7 +125,7 @@ const Variables: React.FC<VariablesProps> = (props) => {
   const variableElements = variables.map((variable) => {
     return (
       <button
-        key={variable.variableName}
+        key={uuidv4()}
         onClick={() => handleButtonClick(variable.variableName)}
       >
         {variable.variableName}
@@ -150,6 +158,7 @@ const Variables: React.FC<VariablesProps> = (props) => {
           updateVariables={updateVariables}
           closeEditForm={closeEditForm}
           setCurrentVariable={props.setCurrentVariable}
+          currentSave={props.currentSave}
         />
       )}
       {deleteDialogueIsShown && (
@@ -162,6 +171,7 @@ const Variables: React.FC<VariablesProps> = (props) => {
           closeDeleteVariableDialogue={closeDeleteVariableDialogue}
           currentVariable={props.currentVariable}
           setCurrentVariable={props.setCurrentVariable}
+          currentSave={props.currentSave}
         />
       )}
     </div>

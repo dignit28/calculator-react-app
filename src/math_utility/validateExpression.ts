@@ -7,6 +7,7 @@ import { saveData } from "../data/saveData";
 import { updateVariableChildren, findVariableIndex } from "../data/saveData";
 
 export function validateVariables(
+  save: number,
   parentVariable: string,
   expression: string
 ): boolean {
@@ -20,13 +21,13 @@ export function validateVariables(
   );
 
   const currentChildren =
-    saveData[0][findVariableIndex(parentVariable)].variableChildren;
+    saveData[save][findVariableIndex(save, parentVariable)].variableChildren;
   function cancelChildrenChange() {
-    saveData[0][findVariableIndex(parentVariable)].variableChildren =
+    saveData[save][findVariableIndex(save, parentVariable)].variableChildren =
       currentChildren;
   }
 
-  updateVariableChildren(parentVariable, expression);
+  updateVariableChildren(save, parentVariable, expression);
 
   const HAS_ITSELF_IN_EXPRESSION =
     variablesInExpression.includes(parentVariable);
@@ -47,7 +48,7 @@ export function validateVariables(
     return false;
   }
 
-  const currentSaveVariables = saveData[0].map((variableData) => {
+  const currentSaveVariables = saveData[save].map((variableData) => {
     return variableData.variableName;
   });
 
@@ -74,7 +75,7 @@ export function validateVariables(
           acc &&
           checkChildrenVariables(
             variableToCheck,
-            saveData[0][findVariableIndex(childVariable)].variableChildren
+            saveData[save][findVariableIndex(save, childVariable)].variableChildren
           )
         );
       }, true);
@@ -83,7 +84,7 @@ export function validateVariables(
 
   const NO_VARIABLE_RECURSION = checkChildrenVariables(
     parentVariable,
-    saveData[0][findVariableIndex(parentVariable)].variableChildren
+    saveData[save][findVariableIndex(save, parentVariable)].variableChildren
   );
 
   if (!NO_VARIABLE_RECURSION) {

@@ -19,6 +19,7 @@ type DeleteDialogueProps = {
   setCurrentVariable: React.Dispatch<
     React.SetStateAction<CurrentVariableState>
   >;
+  currentSave: number;
 };
 
 const DeleteDialogue: React.FC<DeleteDialogueProps> = (props) => {
@@ -26,30 +27,30 @@ const DeleteDialogue: React.FC<DeleteDialogueProps> = (props) => {
     props.updateVariables();
     props.setCurrentVariable({
       name: variableName,
-      index: findVariableIndex(variableName),
+      index: findVariableIndex(props.currentSave, variableName),
     });
     props.closeDeleteVariableDialogue();
   };
 
   const deleteVariable = () => {
-    const variableIndex = findVariableIndex(props.assignedVariable);
-    const parentVariables = getParentVariables(props.assignedVariable);
+    const variableIndex = findVariableIndex(props.currentSave, props.assignedVariable);
+    const parentVariables = getParentVariables(props.currentSave, props.assignedVariable);
 
     parentVariables.forEach((parent) => {
-      saveData[0][findVariableIndex(parent)].computedData = {
-        ...saveData[0][findVariableIndex(parent)].computedData,
+      saveData[props.currentSave][findVariableIndex(props.currentSave, parent)].computedData = {
+        ...saveData[props.currentSave][findVariableIndex(props.currentSave, parent)].computedData,
         computedResult: "Invalid input",
       };
     });
     console.log(saveData);
-    saveData[0].splice(variableIndex, 1);
+    saveData[props.currentSave].splice(variableIndex, 1);
 
     const indexOfVariableToSet =
       props.assignedVariable === props.currentVariable.name
         ? 0
-        : findVariableIndex(props.currentVariable.name);
+        : findVariableIndex(props.currentSave, props.currentVariable.name);
 
-    closeFormCleanup(saveData[0][indexOfVariableToSet].variableName);
+    closeFormCleanup(saveData[props.currentSave][indexOfVariableToSet].variableName);
   };
 
   return (

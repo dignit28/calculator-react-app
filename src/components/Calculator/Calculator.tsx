@@ -33,11 +33,13 @@ type CalculatorProps = {
 
 const Calculator: React.FC<CalculatorProps> = (props) => {
   const [expression, setExpression] = React.useState<ExpressionState>(
-    saveData[0][props.currentVariable.index].inputData
+    saveData[props.currentSave][props.currentVariable.index].inputData
   );
 
   React.useEffect(() => {
-    setExpression(saveData[0][props.currentVariable.index].inputData);
+    setExpression(
+      saveData[props.currentSave][props.currentVariable.index].inputData
+    );
   }, [props.currentVariable]);
 
   const inputField: HTMLInputElement | null =
@@ -62,14 +64,20 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
         const expressionToCalculate = inputField!.value;
         if (
           validateExpression(expressionToCalculate) &&
-          validateVariables(props.currentVariable.name, expressionToCalculate)
+          validateVariables(
+            props.currentSave,
+            props.currentVariable.name,
+            expressionToCalculate
+          )
         ) {
           const resultingFormula = evaluateVariable(
+            props.currentSave,
             props.currentVariable.name,
             expressionToCalculate
           );
 
           const evaluationArray = getParentVariables(
+            props.currentSave,
             props.currentVariable.name
           );
           console.log(evaluationArray);
@@ -77,9 +85,11 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
           while (evaluationArray.length !== 0) {
             const currentVariable = evaluationArray.shift();
             evaluateVariable(
+              props.currentSave,
               currentVariable!,
-              saveData[0][findVariableIndex(currentVariable!)].computedData
-                .computedFormula
+              saveData[props.currentSave][
+                findVariableIndex(props.currentSave, currentVariable!)
+              ].computedData.computedFormula
             );
           }
 
@@ -89,11 +99,15 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
             computedFormula: "Invalid input",
             computedResult: "Invalid input",
           };
-          updateFormulaData(0, props.currentVariable.name, invalidFormulaData);
+          updateFormulaData(
+            props.currentSave,
+            props.currentVariable.name,
+            invalidFormulaData
+          );
           props.setComputedFormula(invalidFormulaData);
         }
         updateInputData(
-          0,
+          props.currentSave,
           props.currentVariable.name,
           expression.displayedValue
         );

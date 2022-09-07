@@ -3,10 +3,12 @@ import { calculateRPN } from "../math_utility/evaluationRPN";
 import { updateFormulaData } from "../data/saveData";
 
 export default function evaluateVariable(
+  save: number,
   currentVariable: string,
   expressionToCalculate: string
 ) {
   const expressionToCalculateOnlyValues = switchVariablesToValues(
+    save,
     expressionToCalculate
   );
   const finalResult = calculateRPN(expressionToCalculateOnlyValues);
@@ -18,7 +20,7 @@ export default function evaluateVariable(
   };
 
   // After evaluation finished, update data
-  updateFormulaData(0, currentVariable, resultingFormula);
+  updateFormulaData(save, currentVariable, resultingFormula);
 
   // Storing this value is not important unless there is a need to update current state
   return resultingFormula;

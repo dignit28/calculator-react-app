@@ -26,11 +26,11 @@ const fixASCIIMathRendering = (expression: string) => {
 };
 
 const Formulas: React.FC<FormulasProps> = (props) => {
-  const childVariableElements = saveData[0][
+  const childVariableElements = saveData[props.currentSave][
     props.currentVariable.index
   ].variableChildren.map((childVariable) => {
     const variableComment =
-      saveData[0][findVariableIndex(childVariable)].variableComment;
+      saveData[props.currentSave][findVariableIndex(props.currentSave, childVariable)].variableComment;
     return (
       <li key={uuidv4()}>
         {childVariable} - {variableComment}

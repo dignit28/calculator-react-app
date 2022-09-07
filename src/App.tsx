@@ -39,16 +39,16 @@ function App() {
   const [currentVariable, setCurrentVariable] =
     React.useState<CurrentVariableState>({
       name: saveData[0][0].variableName,
-      index: findVariableIndex(saveData[0][0].variableName),
+      index: 0,
     });
 
   const [computedFormula, setComputedFormula] =
-    React.useState<ComputedFormulaState>(
-      saveData[0][currentVariable.index].computedData
-    );
+    React.useState<ComputedFormulaState>(saveData[0][0].computedData);
 
   React.useEffect(() => {
-    setComputedFormula(saveData[0][currentVariable.index].computedData);
+    setComputedFormula(
+      saveData[currentSave][currentVariable.index].computedData
+    );
   }, [currentVariable]);
 
   return (

@@ -50,11 +50,11 @@ export const updateSaveData = (
   const newArrayValue = newInputData.displayedValue.split("");
   newArrayValue.push("caret");
 
-  saveData[save][findVariableIndex(variable)].inputData = {
+  saveData[save][findVariableIndex(save, variable)].inputData = {
     displayedValue: newInputData.displayedValue,
     arrayValue: newArrayValue,
   };
-  saveData[save][findVariableIndex(variable)].computedData = newComputedData;
+  saveData[save][findVariableIndex(save, variable)].computedData = newComputedData;
 };
 
 export const updateInputData = (
@@ -65,7 +65,7 @@ export const updateInputData = (
   const newArrayValue = newInputValue.split("");
   newArrayValue.push("caret");
 
-  saveData[save][findVariableIndex(variable)].inputData = {
+  saveData[save][findVariableIndex(save, variable)].inputData = {
     displayedValue: newInputValue,
     arrayValue: newArrayValue,
   };
@@ -76,10 +76,11 @@ export const updateFormulaData = (
   variable: string,
   newComputedData: ComputedFormulaState
 ) => {
-  saveData[save][findVariableIndex(variable)].computedData = newComputedData;
+  saveData[save][findVariableIndex(save, variable)].computedData = newComputedData;
 };
 
 export const updateVariableChildren = (
+  save: number,
   parentVariable: string,
   expression: string
 ) => {
@@ -94,22 +95,24 @@ export const updateVariableChildren = (
 
   console.log(variablesInExpression);
 
-  saveData[0][findVariableIndex(parentVariable)].variableChildren =
+  saveData[save][findVariableIndex(save, parentVariable)].variableChildren =
     variablesInExpression;
 };
 
-export const findVariableIndex = (variable: string) => {
-  const variableIndex = saveData[0].findIndex((variableData: VariableData) => {
-    return variableData.variableName === variable;
-  });
+export const findVariableIndex = (save: number, variable: string) => {
+  const variableIndex = saveData[save].findIndex(
+    (variableData: VariableData) => {
+      return variableData.variableName === variable;
+    }
+  );
 
   return variableIndex !== -1 ? variableIndex : 0;
 };
 
-export const getParentVariables = (variable: string) => {
+export const getParentVariables = (save: number, variable: string) => {
   // This function will create array of dependent variables in the order
   // that is needed for correct evaluation
-  const currentSaveVariables = saveData[0].map((variableData) => {
+  const currentSaveVariables = saveData[save].map((variableData) => {
     return variableData.variableName;
   });
 
@@ -118,8 +121,8 @@ export const getParentVariables = (variable: string) => {
   const addParentsToArray = (childVariable: string) => {
     currentSaveVariables.forEach((parentVariable) => {
       if (
-        saveData[0][
-          findVariableIndex(parentVariable)
+        saveData[save][
+          findVariableIndex(save, parentVariable)
         ].variableChildren.includes(childVariable)
       ) {
         parentsArrayWithDuplicates.push(parentVariable);
@@ -141,6 +144,6 @@ export const getParentVariables = (variable: string) => {
       parentsArray.unshift(poppedParent!);
     }
   }
-  
+
   return parentsArray;
-}
+};

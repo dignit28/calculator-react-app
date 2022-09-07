@@ -20,6 +20,7 @@ type EditFormProps = {
   setCurrentVariable: React.Dispatch<
     React.SetStateAction<CurrentVariableState>
   >;
+  currentSave: number;
 };
 
 const EditForm: React.FC<EditFormProps> = (props) => {
@@ -28,7 +29,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
     variableComment:
       props.formType === "new"
         ? ""
-        : saveData[0][findVariableIndex(props.assignedVariable)]
+        : saveData[props.currentSave][findVariableIndex(props.currentSave, props.assignedVariable)]
             .variableComment,
   });
 
@@ -45,7 +46,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
     props.updateVariables();
     props.setCurrentVariable({
       name: variableName,
-      index: findVariableIndex(variableName),
+      index: findVariableIndex(props.currentSave, variableName),
     });
     props.closeEditForm();
   };
@@ -57,12 +58,12 @@ const EditForm: React.FC<EditFormProps> = (props) => {
       formData.variableName.match(/^[a-z]$/i) &&
       !BANNED_VARIABLE_NAMES.includes(formData.variableName)
     ) {
-      const existingVariables = saveData[0].map((variableData) => {
+      const existingVariables = saveData[props.currentSave].map((variableData) => {
         return variableData.variableName;
       });
       // Check if new variable name is not taken
       if (!existingVariables.includes(formData.variableName)) {
-        saveData[0].push({
+        saveData[props.currentSave].push({
           variableName: formData.variableName,
           variableComment: formData.variableComment,
           variableChildren: [],
@@ -94,7 +95,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
       newVariableName.match(/^[a-z]$/i) &&
       !BANNED_VARIABLE_NAMES.includes(newVariableName)
     ) {
-      const existingVariables = saveData[0].map((variableData) => {
+      const existingVariables = saveData[props.currentSave].map((variableData) => {
         return variableData.variableName;
       });
       // Check if variable name is not taken or not changed
@@ -105,7 +106,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
         // If variable name is correct, start editing process
         // Iterate over every variable to fix dependencies
         existingVariables.forEach((variable) => {
-          const variableData = saveData[0][findVariableIndex(variable)];
+          const variableData = saveData[props.currentSave][findVariableIndex(props.currentSave, variable)];
           const childrenOfVariable = variableData.variableChildren;
           // If the changing variable is in child list of current variable,
           // Rewrite current variable's data with new variable name
@@ -150,9 +151,9 @@ const EditForm: React.FC<EditFormProps> = (props) => {
           }
         });
         // After editing dependent variables, fix the variable itself
-        saveData[0][findVariableIndex(props.assignedVariable)].variableComment =
+        saveData[props.currentSave][findVariableIndex(props.currentSave, props.assignedVariable)].variableComment =
           newVariableComment;
-        saveData[0][findVariableIndex(props.assignedVariable)].variableName =
+        saveData[props.currentSave][findVariableIndex(props.currentSave, props.assignedVariable)].variableName =
           newVariableName;
 
         closeFormCleanup(newVariableName);
