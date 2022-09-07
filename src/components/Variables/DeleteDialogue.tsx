@@ -33,12 +33,29 @@ const DeleteDialogue: React.FC<DeleteDialogueProps> = (props) => {
   };
 
   const deleteVariable = () => {
-    const variableIndex = findVariableIndex(props.currentSave, props.assignedVariable);
-    const parentVariables = getParentVariables(props.currentSave, props.assignedVariable);
+    const variableIndex = findVariableIndex(
+      props.currentSave,
+      props.assignedVariable
+    );
+    const parentVariables = getParentVariables(
+      props.currentSave,
+      props.assignedVariable
+    );
 
     parentVariables.forEach((parent) => {
-      saveData[props.currentSave][findVariableIndex(props.currentSave, parent)].computedData = {
-        ...saveData[props.currentSave][findVariableIndex(props.currentSave, parent)].computedData,
+      const parentSaveData =
+        saveData[props.currentSave][
+          findVariableIndex(props.currentSave, parent)
+        ];
+      const indexOfChild = parentSaveData.variableChildren.indexOf(
+        props.assignedVariable
+      );
+      if (indexOfChild > -1) {
+        parentSaveData.variableChildren.splice(indexOfChild, 1);
+      }
+
+      parentSaveData.computedData = {
+        computedFormula: "Invalid input",
         computedResult: "Invalid input",
       };
     });
@@ -50,7 +67,9 @@ const DeleteDialogue: React.FC<DeleteDialogueProps> = (props) => {
         ? 0
         : findVariableIndex(props.currentSave, props.currentVariable.name);
 
-    closeFormCleanup(saveData[props.currentSave][indexOfVariableToSet].variableName);
+    closeFormCleanup(
+      saveData[props.currentSave][indexOfVariableToSet].variableName
+    );
   };
 
   return (
