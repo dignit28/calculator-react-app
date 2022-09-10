@@ -1,6 +1,6 @@
 import React from "react";
 // Styles
-import { DeleteDialogueWrapper, FocusTrap } from "./Variables.styles";
+import { DeleteDialogueWrapper, FocusTrap } from "../../misc_styles/Forms.styles";
 // Data
 import { saveData } from "../../data/saveData";
 // Functions
@@ -8,7 +8,7 @@ import { findVariableIndex, getParentVariables } from "../../data/saveData";
 //Types
 import { CurrentVariableState } from "../../App";
 
-type DeleteDialogueProps = {
+type DeleteVariableDialogueProps = {
   assignedVariable: string;
   onKeyDown: (e: any) => void;
   onClickOutside: (e: any) => void;
@@ -22,7 +22,7 @@ type DeleteDialogueProps = {
   currentSave: number;
 };
 
-const DeleteDialogue: React.FC<DeleteDialogueProps> = (props) => {
+const DeleteVariableDialogue: React.FC<DeleteVariableDialogueProps> = (props) => {
   const closeFormCleanup = (variableName: string) => {
     props.updateVariables();
     props.setCurrentVariable({
@@ -95,4 +95,4 @@ const DeleteDialogue: React.FC<DeleteDialogueProps> = (props) => {
   );
 };
 
-export default DeleteDialogue;
+export default DeleteVariableDialogue;

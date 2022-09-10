@@ -6,7 +6,7 @@ import {
   updateInputData,
 } from "../../data/saveData";
 import EditForm from "./EditForm";
-import DeleteDialogue from "./DeleteDialogue";
+import DeleteVariableDialogue from "./DeleteVariableDialogue";
 // Interfaces
 import { VariableData } from "../../data/saveData";
 // Types
@@ -62,13 +62,11 @@ const Variables: React.FC<VariablesProps> = (props) => {
   const onKeyDown = (event: React.KeyboardEvent) => {
     switch (event.key) {
       case "Escape":
-        console.log("Escape memes");
         closeEditForm();
         closeDeleteVariableDialogue();
         break;
       case "Enter":
         event.preventDefault();
-        console.log("Enter memes");
         const confirmButton: HTMLButtonElement =
           document.querySelector(".confirm-button")!;
         confirmButton.click();
@@ -162,7 +160,7 @@ const Variables: React.FC<VariablesProps> = (props) => {
         />
       )}
       {deleteDialogueIsShown && (
-        <DeleteDialogue
+        <DeleteVariableDialogue
           assignedVariable={assignedFormVariable}
           onKeyDown={onKeyDown}
           onClickOutside={onClickOutside}

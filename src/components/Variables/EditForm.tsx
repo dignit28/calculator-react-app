@@ -1,6 +1,6 @@
 import React from "react";
 // Styles
-import { EditFormWrapper, FocusTrap } from "./Variables.styles";
+import { EditFormWrapper, FocusTrap } from "../../misc_styles/Forms.styles";
 // Functions
 import { findVariableIndex } from "../../data/saveData";
 // Data

@@ -54,7 +54,11 @@ function App() {
   return (
     <MathJaxContext config={config}>
       <div className="page">
-        <Saves currentSave={currentSave} setCurrentSave={setCurrentSave} />
+        <Saves
+          currentSave={currentSave}
+          setCurrentSave={setCurrentSave}
+          currentVariable={currentVariable}
+        />
         <Variables
           currentVariable={currentVariable}
           currentSave={currentSave}
