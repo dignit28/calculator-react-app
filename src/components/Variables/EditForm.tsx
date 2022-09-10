@@ -7,7 +7,7 @@ import { findVariableIndex } from "../../data/saveData";
 import { saveData } from "../../data/saveData";
 import { BANNED_VARIABLE_NAMES } from "../../data/bannedVariableNames";
 //Types
-import { CurrentVariableState } from "../../App";
+import { CurrentSaveState, CurrentVariableState } from "../../App";
 
 type EditFormProps = {
   formType: string;
@@ -20,7 +20,7 @@ type EditFormProps = {
   setCurrentVariable: React.Dispatch<
     React.SetStateAction<CurrentVariableState>
   >;
-  currentSave: number;
+  currentSave: CurrentSaveState;
 };
 
 const EditForm: React.FC<EditFormProps> = (props) => {
@@ -29,8 +29,9 @@ const EditForm: React.FC<EditFormProps> = (props) => {
     variableComment:
       props.formType === "new"
         ? ""
-        : saveData[props.currentSave][findVariableIndex(props.currentSave, props.assignedVariable)]
-            .variableComment,
+        : saveData[props.currentSave.index][
+            findVariableIndex(props.currentSave.index, props.assignedVariable)
+          ].variableComment,
   });
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -46,7 +47,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
     props.updateVariables();
     props.setCurrentVariable({
       name: variableName,
-      index: findVariableIndex(props.currentSave, variableName),
+      index: findVariableIndex(props.currentSave.index, variableName),
     });
     props.closeEditForm();
   };
@@ -58,12 +59,14 @@ const EditForm: React.FC<EditFormProps> = (props) => {
       formData.variableName.match(/^[a-z]$/i) &&
       !BANNED_VARIABLE_NAMES.includes(formData.variableName)
     ) {
-      const existingVariables = saveData[props.currentSave].map((variableData) => {
-        return variableData.variableName;
-      });
+      const existingVariables = saveData[props.currentSave.index].map(
+        (variableData) => {
+          return variableData.variableName;
+        }
+      );
       // Check if new variable name is not taken
       if (!existingVariables.includes(formData.variableName)) {
-        saveData[props.currentSave].push({
+        saveData[props.currentSave.index].push({
           variableName: formData.variableName,
           variableComment: formData.variableComment,
           variableChildren: [],
@@ -95,9 +98,11 @@ const EditForm: React.FC<EditFormProps> = (props) => {
       newVariableName.match(/^[a-z]$/i) &&
       !BANNED_VARIABLE_NAMES.includes(newVariableName)
     ) {
-      const existingVariables = saveData[props.currentSave].map((variableData) => {
-        return variableData.variableName;
-      });
+      const existingVariables = saveData[props.currentSave.index].map(
+        (variableData) => {
+          return variableData.variableName;
+        }
+      );
       // Check if variable name is not taken or not changed
       if (
         !existingVariables.includes(newVariableName) ||
@@ -106,7 +111,10 @@ const EditForm: React.FC<EditFormProps> = (props) => {
         // If variable name is correct, start editing process
         // Iterate over every variable to fix dependencies
         existingVariables.forEach((variable) => {
-          const variableData = saveData[props.currentSave][findVariableIndex(props.currentSave, variable)];
+          const variableData =
+            saveData[props.currentSave.index][
+              findVariableIndex(props.currentSave.index, variable)
+            ];
           const childrenOfVariable = variableData.variableChildren;
           // If the changing variable is in child list of current variable,
           // Rewrite current variable's data with new variable name
@@ -151,10 +159,12 @@ const EditForm: React.FC<EditFormProps> = (props) => {
           }
         });
         // After editing dependent variables, fix the variable itself
-        saveData[props.currentSave][findVariableIndex(props.currentSave, props.assignedVariable)].variableComment =
-          newVariableComment;
-        saveData[props.currentSave][findVariableIndex(props.currentSave, props.assignedVariable)].variableName =
-          newVariableName;
+        saveData[props.currentSave.index][
+          findVariableIndex(props.currentSave.index, props.assignedVariable)
+        ].variableComment = newVariableComment;
+        saveData[props.currentSave.index][
+          findVariableIndex(props.currentSave.index, props.assignedVariable)
+        ].variableName = newVariableName;
 
         closeFormCleanup(newVariableName);
       } else {

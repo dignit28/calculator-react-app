@@ -6,11 +6,11 @@ import { saveData } from "../../data/saveData";
 // Functions
 import { updateInputData } from "../../data/saveData";
 // Types
-import { CurrentVariableState } from "../../App";
+import { CurrentSaveState, CurrentVariableState } from "../../App";
 
 type SavesProps = {
-  currentSave: number;
-  setCurrentSave: React.Dispatch<React.SetStateAction<number>>;
+  currentSave: CurrentSaveState;
+  setCurrentSave: React.Dispatch<React.SetStateAction<CurrentSaveState>>;
   currentVariable: CurrentVariableState;
   setCurrentVariable: React.Dispatch<
     React.SetStateAction<CurrentVariableState>
@@ -45,10 +45,10 @@ const Saves: React.FC<SavesProps> = (props) => {
       document.querySelector(".calculator-input")!;
     const expression = calculatorInputElement.value;
 
-    updateInputData(props.currentSave, props.currentVariable.name, expression);
-    props.setCurrentSave(save);
+    updateInputData(props.currentSave.index, props.currentVariable.name, expression);
+    props.setCurrentSave({index: save});
     props.setCurrentVariable({
-      name: saveData[props.currentSave][0].variableName,
+      name: saveData[props.currentSave.index][0].variableName,
       index: 0,
     });
   };
@@ -106,7 +106,10 @@ const Saves: React.FC<SavesProps> = (props) => {
         <DeleteDialogue
           assignedSave={assignedFormSave}
           position={cursorClickPosition}
+          setCurrentSave={props.setCurrentSave}
+          setCurrentVariable={props.setCurrentVariable}
           closeDeleteSaveDialogue={closeDeleteSaveDialogue}
+          updateSaves={updateSaves}
         />
       )}
     </div>

@@ -16,6 +16,9 @@ const config = {
     ],
   },
 };
+export type CurrentSaveState = {
+  index: number;
+};
 
 export type CurrentVariableState = {
   name: string;
@@ -33,7 +36,9 @@ export type ComputedFormulaState = {
 };
 
 function App() {
-  const [currentSave, setCurrentSave] = React.useState<number>(0);
+  const [currentSave, setCurrentSave] = React.useState<CurrentSaveState>({
+    index: 0,
+  });
 
   const [currentVariable, setCurrentVariable] =
     React.useState<CurrentVariableState>({
@@ -46,7 +51,7 @@ function App() {
 
   React.useEffect(() => {
     setComputedFormula(
-      saveData[currentSave][currentVariable.index].computedData
+      saveData[currentSave.index][currentVariable.index].computedData
     );
   }, [currentVariable, currentSave]);
 

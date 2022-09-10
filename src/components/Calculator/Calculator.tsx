@@ -20,6 +20,7 @@ import buttons from "../../data/buttons";
 import {
   ExpressionState,
   ComputedFormulaState,
+  CurrentSaveState,
   CurrentVariableState,
 } from "../../App";
 
@@ -27,20 +28,20 @@ type CalculatorProps = {
   setComputedFormula: React.Dispatch<
     React.SetStateAction<ComputedFormulaState>
   >;
-  currentSave: number;
+  currentSave: CurrentSaveState;
   currentVariable: CurrentVariableState;
 };
 
 const Calculator: React.FC<CalculatorProps> = (props) => {
   const [expression, setExpression] = React.useState<ExpressionState>(
-    saveData[props.currentSave][props.currentVariable.index].inputData
+    saveData[props.currentSave.index][props.currentVariable.index].inputData
   );
 
   React.useEffect(() => {
     setExpression(
-      saveData[props.currentSave][props.currentVariable.index].inputData
+      saveData[props.currentSave.index][props.currentVariable.index].inputData
     );
-  }, [props.currentVariable]);
+  }, [props.currentVariable, props.currentSave]);
 
   const inputField: HTMLInputElement | null =
     document.querySelector(".calculator-input");
@@ -65,19 +66,19 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
         if (
           validateExpression(expressionToCalculate) &&
           validateVariables(
-            props.currentSave,
+            props.currentSave.index,
             props.currentVariable.name,
             expressionToCalculate
           )
         ) {
           const resultingFormula = evaluateVariable(
-            props.currentSave,
+            props.currentSave.index,
             props.currentVariable.name,
             expressionToCalculate
           );
 
           const evaluationArray = getParentVariables(
-            props.currentSave,
+            props.currentSave.index,
             props.currentVariable.name
           );
           console.log(evaluationArray);
@@ -85,10 +86,10 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
           while (evaluationArray.length !== 0) {
             const currentVariable = evaluationArray.shift();
             evaluateVariable(
-              props.currentSave,
+              props.currentSave.index,
               currentVariable!,
-              saveData[props.currentSave][
-                findVariableIndex(props.currentSave, currentVariable!)
+              saveData[props.currentSave.index][
+                findVariableIndex(props.currentSave.index, currentVariable!)
               ].computedData.computedFormula
             );
           }
@@ -100,14 +101,14 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
             computedResult: "Invalid input",
           };
           updateFormulaData(
-            props.currentSave,
+            props.currentSave.index,
             props.currentVariable.name,
             invalidFormulaData
           );
           props.setComputedFormula(invalidFormulaData);
         }
         updateInputData(
-          props.currentSave,
+          props.currentSave.index,
           props.currentVariable.name,
           expression.displayedValue
         );

@@ -8,12 +8,12 @@ import { saveData } from "../../data/saveData";
 // Styles
 import ChildVariablesWrapper from "./Formulas.styles";
 //Types
-import { CurrentVariableState } from "../../App";
+import { CurrentSaveState, CurrentVariableState } from "../../App";
 
 type FormulasProps = {
   computedFormula: string;
   computedResult: string;
-  currentSave: number;
+  currentSave: CurrentSaveState;
   currentVariable: CurrentVariableState;
 };
 
@@ -26,11 +26,13 @@ const fixASCIIMathRendering = (expression: string) => {
 };
 
 const Formulas: React.FC<FormulasProps> = (props) => {
-  const childVariableElements = saveData[props.currentSave][
+  const childVariableElements = saveData[props.currentSave.index][
     props.currentVariable.index
   ].variableChildren.map((childVariable) => {
     const variableComment =
-      saveData[props.currentSave][findVariableIndex(props.currentSave, childVariable)].variableComment;
+      saveData[props.currentSave.index][
+        findVariableIndex(props.currentSave.index, childVariable)
+      ].variableComment;
     return (
       <li key={uuidv4()}>
         {childVariable} - {variableComment}

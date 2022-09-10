@@ -25,19 +25,6 @@ export const saveData: SaveData = [
         computedResult: "",
       },
     },
-    {
-      variableName: "y",
-      variableComment: "Variable y",
-      variableChildren: [],
-      inputData: {
-        displayedValue: "",
-        arrayValue: ["caret"],
-      },
-      computedData: {
-        computedFormula: "",
-        computedResult: "",
-      },
-    },
   ],
 ];
 

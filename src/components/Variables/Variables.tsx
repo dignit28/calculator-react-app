@@ -10,11 +10,11 @@ import DeleteVariableDialogue from "./DeleteVariableDialogue";
 // Interfaces
 import { VariableData } from "../../data/saveData";
 // Types
-import { CurrentVariableState } from "../../App";
+import { CurrentSaveState, CurrentVariableState } from "../../App";
 
 type VariablesProps = {
   currentVariable: CurrentVariableState;
-  currentSave: number;
+  currentSave: CurrentSaveState;
   setCurrentVariable: React.Dispatch<
     React.SetStateAction<CurrentVariableState>
   >;
@@ -28,7 +28,7 @@ const Variables: React.FC<VariablesProps> = (props) => {
     [number, number]
   >([0, 0]);
   const [variables, setVariables] = React.useState<VariableData[]>(
-    saveData[props.currentSave]
+    saveData[props.currentSave.index]
   );
   const [deleteDialogueIsShown, setDeleteDialogueIsShown] =
     React.useState(false);
@@ -42,7 +42,7 @@ const Variables: React.FC<VariablesProps> = (props) => {
   }, [editIsShown, deleteDialogueIsShown]);
 
   React.useEffect(() => {
-    setVariables(saveData[props.currentSave]);
+    setVariables(saveData[props.currentSave.index]);
   }, [props.currentSave]);
 
   const openEditForm = (event: React.MouseEvent) => {
@@ -87,21 +87,21 @@ const Variables: React.FC<VariablesProps> = (props) => {
   };
 
   const updateVariables = () => {
-    setVariables(saveData[props.currentSave]);
+    setVariables(saveData[props.currentSave.index]);
   };
 
   const handleButtonClick = (variable: string) => {
     const calculatorInputElement: HTMLInputElement =
       document.querySelector(".calculator-input")!;
     const expression = calculatorInputElement.value;
-    updateInputData(props.currentSave, props.currentVariable.name, expression);
+    updateInputData(props.currentSave.index, props.currentVariable.name, expression);
     props.setCurrentVariable({
       name: variable,
-      index: findVariableIndex(props.currentSave, variable),
+      index: findVariableIndex(props.currentSave.index, variable),
     });
     console.log(
-      saveData[props.currentSave][
-        findVariableIndex(props.currentSave, variable)
+      saveData[props.currentSave.index][
+        findVariableIndex(props.currentSave.index, variable)
       ].variableChildren
     );
   };
