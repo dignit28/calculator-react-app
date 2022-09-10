@@ -12,9 +12,15 @@ type SavesProps = {
   currentSave: number;
   setCurrentSave: React.Dispatch<React.SetStateAction<number>>;
   currentVariable: CurrentVariableState;
+  setCurrentVariable: React.Dispatch<
+    React.SetStateAction<CurrentVariableState>
+  >;
 };
 
 const Saves: React.FC<SavesProps> = (props) => {
+  const [saves, setSaves] = React.useState(
+    saveData.map((value, index) => index)
+  );
   const [deleteDialogueIsShown, setDeleteDialogueIsShown] =
     React.useState(false);
   const [cursorClickPosition, setCursorClickPosition] = React.useState<
@@ -30,6 +36,10 @@ const Saves: React.FC<SavesProps> = (props) => {
     }
   }, [deleteDialogueIsShown]);
 
+  const updateSaves = () => {
+    setSaves(saveData.map((value, index) => index));
+  };
+
   const switchSave = (save: number) => {
     const calculatorInputElement: HTMLInputElement =
       document.querySelector(".calculator-input")!;
@@ -37,6 +47,10 @@ const Saves: React.FC<SavesProps> = (props) => {
 
     updateInputData(props.currentSave, props.currentVariable.name, expression);
     props.setCurrentSave(save);
+    props.setCurrentVariable({
+      name: saveData[props.currentSave][0].variableName,
+      index: 0,
+    });
   };
 
   const openDeleteSaveDialogue = (event: React.MouseEvent) => {
@@ -55,14 +69,30 @@ const Saves: React.FC<SavesProps> = (props) => {
   };
 
   const addNewSave = () => {
-    console.log("Add");
+    saveData.push([
+      {
+        variableName: "x",
+        variableComment: "Variable x",
+        variableChildren: [],
+        inputData: {
+          displayedValue: "",
+          arrayValue: ["caret"],
+        },
+        computedData: {
+          computedFormula: "",
+          computedResult: "",
+        },
+      },
+    ]);
+    updateSaves();
+    switchSave(saves.length);
   };
 
-  const savesElements = saveData.map((value, index) => {
+  const savesElements = saves.map((value) => {
     return (
-      <button key={uuidv4()} onClick={() => switchSave(index)}>
-        {index + 1}
-        <button onClick={(event) => deleteSave(event, index)}>D</button>
+      <button key={uuidv4()} onClick={() => switchSave(value)}>
+        {value + 1}
+        <button onClick={(event) => deleteSave(event, value)}>D</button>
       </button>
     );
   });

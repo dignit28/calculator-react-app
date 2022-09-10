@@ -41,6 +41,10 @@ const Variables: React.FC<VariablesProps> = (props) => {
     }
   }, [editIsShown, deleteDialogueIsShown]);
 
+  React.useEffect(() => {
+    setVariables(saveData[props.currentSave]);
+  }, [props.currentSave]);
+
   const openEditForm = (event: React.MouseEvent) => {
     setEditIsShown(true);
     setCursorClickPosition([event.clientX, event.clientY]);

@@ -5,7 +5,6 @@ import Saves from "./components/Saves/Saves";
 import Variables from "./components/Variables/Variables";
 import { MathJaxContext } from "better-react-mathjax";
 import { saveData } from "./data/saveData";
-import { findVariableIndex } from "./data/saveData";
 
 const config = {
   loader: { load: ["input/asciimath"] },
@@ -49,7 +48,7 @@ function App() {
     setComputedFormula(
       saveData[currentSave][currentVariable.index].computedData
     );
-  }, [currentVariable]);
+  }, [currentVariable, currentSave]);
 
   return (
     <MathJaxContext config={config}>
@@ -58,6 +57,7 @@ function App() {
           currentSave={currentSave}
           setCurrentSave={setCurrentSave}
           currentVariable={currentVariable}
+          setCurrentVariable={setCurrentVariable}
         />
         <Variables
           currentVariable={currentVariable}
