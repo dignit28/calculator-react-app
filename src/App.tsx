@@ -5,6 +5,7 @@ import Saves from "./components/Saves/Saves";
 import Variables from "./components/Variables/Variables";
 import { MathJaxContext } from "better-react-mathjax";
 import { saveData } from "./data/saveData";
+import { GlobalStyle } from "./App.styles";
 
 const config = {
   loader: { load: ["input/asciimath"] },
@@ -56,32 +57,35 @@ function App() {
   }, [currentVariable, currentSave]);
 
   return (
-    <MathJaxContext config={config}>
-      <div className="page">
-        <Saves
-          currentSave={currentSave}
-          setCurrentSave={setCurrentSave}
-          currentVariable={currentVariable}
-          setCurrentVariable={setCurrentVariable}
-        />
-        <Variables
-          currentVariable={currentVariable}
-          currentSave={currentSave}
-          setCurrentVariable={setCurrentVariable}
-        />
-        <Calculator
-          setComputedFormula={setComputedFormula}
-          currentSave={currentSave}
-          currentVariable={currentVariable}
-        />
-        <Formulas
-          computedFormula={computedFormula.computedFormula}
-          computedResult={computedFormula.computedResult}
-          currentSave={currentSave}
-          currentVariable={currentVariable}
-        />
-      </div>
-    </MathJaxContext>
+    <>
+      <GlobalStyle />
+      <MathJaxContext config={config}>
+        <div className="page">
+          <Saves
+            currentSave={currentSave}
+            setCurrentSave={setCurrentSave}
+            currentVariable={currentVariable}
+            setCurrentVariable={setCurrentVariable}
+          />
+          <Variables
+            currentVariable={currentVariable}
+            currentSave={currentSave}
+            setCurrentVariable={setCurrentVariable}
+          />
+          <Calculator
+            setComputedFormula={setComputedFormula}
+            currentSave={currentSave}
+            currentVariable={currentVariable}
+          />
+          <Formulas
+            computedFormula={computedFormula.computedFormula}
+            computedResult={computedFormula.computedResult}
+            currentSave={currentSave}
+            currentVariable={currentVariable}
+          />
+        </div>
+      </MathJaxContext>
+    </>
   );
 }
 

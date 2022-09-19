@@ -7,6 +7,8 @@ import { saveData } from "../../data/saveData";
 import { updateInputData } from "../../data/saveData";
 // Types
 import { CurrentSaveState, CurrentVariableState } from "../../App";
+// Styles
+import SavesWrapper from "./Saves.styles";
 
 type SavesProps = {
   currentSave: CurrentSaveState;
@@ -45,8 +47,12 @@ const Saves: React.FC<SavesProps> = (props) => {
       document.querySelector(".calculator-input")!;
     const expression = calculatorInputElement.value;
 
-    updateInputData(props.currentSave.index, props.currentVariable.name, expression);
-    props.setCurrentSave({index: save});
+    updateInputData(
+      props.currentSave.index,
+      props.currentVariable.name,
+      expression
+    );
+    props.setCurrentSave({ index: save });
     props.setCurrentVariable({
       name: saveData[props.currentSave.index][0].variableName,
       index: 0,
@@ -90,18 +96,28 @@ const Saves: React.FC<SavesProps> = (props) => {
 
   const savesElements = saves.map((value) => {
     return (
-      <button key={uuidv4()} onClick={() => switchSave(value)}>
-        {value + 1}
-        <button onClick={(event) => deleteSave(event, value)}>D</button>
-      </button>
+      <li
+        className={props.currentSave.index === value ? "selected" : ""}
+        key={uuidv4()}
+        onClick={() => switchSave(value)}
+      >
+        <p>{value + 1}</p>
+        {saves.length !== 1 ? (
+          <i
+            className="fa-solid fa-trash"
+            onClick={(event) => deleteSave(event, value)}
+          ></i>
+        ) : (
+          ""
+        )}
+      </li>
     );
-  });
+  }, this);
 
   return (
-    <div>
-      <p>Saves</p>
-      {savesElements}
-      <button onClick={addNewSave}>+</button>
+    <div className="saves-component">
+      <SavesWrapper className="saves-elements">{savesElements}</SavesWrapper>
+      <i className="fa-solid fa-plus add-save-button" onClick={addNewSave}></i>
       {deleteDialogueIsShown && (
         <DeleteDialogue
           assignedSave={assignedFormSave}
