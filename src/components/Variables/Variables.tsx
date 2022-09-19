@@ -11,6 +11,8 @@ import DeleteVariableDialogue from "./DeleteVariableDialogue";
 import { VariableData } from "../../data/saveData";
 // Types
 import { CurrentSaveState, CurrentVariableState } from "../../App";
+// Styles
+import VariablesWrapper from "./Variables.styles";
 
 type VariablesProps = {
   currentVariable: CurrentVariableState;
@@ -94,7 +96,11 @@ const Variables: React.FC<VariablesProps> = (props) => {
     const calculatorInputElement: HTMLInputElement =
       document.querySelector(".calculator-input")!;
     const expression = calculatorInputElement.value;
-    updateInputData(props.currentSave.index, props.currentVariable.name, expression);
+    updateInputData(
+      props.currentSave.index,
+      props.currentVariable.name,
+      expression
+    );
     props.setCurrentVariable({
       name: variable,
       index: findVariableIndex(props.currentSave.index, variable),
@@ -124,32 +130,40 @@ const Variables: React.FC<VariablesProps> = (props) => {
     openDeleteVariableDialogue(event);
   };
 
-  const variableElements = variables.map((variable) => {
+  const variableElements = variables.map((variable, index) => {
     return (
-      <button
+      <li
         key={uuidv4()}
+        className={props.currentVariable.index === index ? "selected" : ""}
         onClick={() => handleButtonClick(variable.variableName)}
       >
-        {variable.variableName}
-        <button onClick={(event) => editVariable(event, variable.variableName)}>
-          E
-        </button>
-        <button
-          onClick={(event) => deleteVariable(event, variable.variableName)}
-        >
-          D
-        </button>
-      </button>
+        <p>{variable.variableName}</p>
+        <i
+          className="fa-solid fa-pen-to-square"
+          onClick={(event) => editVariable(event, variable.variableName)}
+        ></i>
+        {variables.length !== 1 ? (
+          <i
+            className="fa-solid fa-trash"
+            onClick={(event) => deleteVariable(event, variable.variableName)}
+          ></i>
+        ) : (
+          ""
+        )}
+      </li>
     );
   });
 
   return (
-    <div>
-      <p>Variables</p>
-      <div>
-        {variableElements}
-        <button onClick={(event) => newVariable(event)}>+</button>
-      </div>
+    <div className="variables-component">
+      <aside>
+        <VariablesWrapper>
+          {variableElements}
+          <li onClick={(event) => newVariable(event)}>
+            <i className="fa-solid fa-plus add-save-button"></i>
+          </li>
+        </VariablesWrapper>
+      </aside>
       {editIsShown && (
         <EditForm
           formType={formType}

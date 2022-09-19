@@ -27,4 +27,12 @@ export const GlobalStyle = createGlobalStyle`
       }
     }
   }
+
+  .variables-component {
+    position: fixed;
+    height: 100%;
+    width: 80px;
+    background-color: rgb(221, 239, 245);
+    border-right: solid 2px rgb(138, 173, 184);
+  }
 `;
