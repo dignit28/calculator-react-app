@@ -1,27 +1,34 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
-import DeleteDialogue from "./DeleteSaveDialogue";
-// Data
-import { saveData } from "../../data/saveData";
-// Functions
-import { updateInputData } from "../../data/saveData";
+import DeleteSaveDialogue from "./DeleteSaveDialogue";
 // Types
-import { CurrentSaveState, CurrentVariableState } from "../../App";
+import {
+  CurrentSaveState,
+  CurrentVariableState,
+  SaveDataState,
+} from "../../App";
 // Styles
 import SavesWrapper from "./Saves.styles";
 
 type SavesProps = {
+  saveData: SaveDataState;
+  setSaveData: React.Dispatch<React.SetStateAction<SaveDataState>>;
   currentSave: CurrentSaveState;
   setCurrentSave: React.Dispatch<React.SetStateAction<CurrentSaveState>>;
   currentVariable: CurrentVariableState;
   setCurrentVariable: React.Dispatch<
     React.SetStateAction<CurrentVariableState>
   >;
+  updateInputData: (
+    save: number,
+    variable: string,
+    newInputValue: string
+  ) => void;
 };
 
 const Saves: React.FC<SavesProps> = (props) => {
   const [saves, setSaves] = React.useState(
-    saveData.map((value, index) => index)
+    props.saveData.map((value, index) => index)
   );
   const [deleteDialogueIsShown, setDeleteDialogueIsShown] =
     React.useState(false);
@@ -38,23 +45,23 @@ const Saves: React.FC<SavesProps> = (props) => {
     }
   }, [deleteDialogueIsShown]);
 
-  const updateSaves = () => {
-    setSaves(saveData.map((value, index) => index));
-  };
+  React.useEffect(() => {
+    setSaves(props.saveData.map((value, index) => index));
+  }, [props.saveData])
 
   const switchSave = (save: number) => {
     const calculatorInputElement: HTMLInputElement =
       document.querySelector(".calculator-input")!;
     const expression = calculatorInputElement.value;
 
-    updateInputData(
+    props.updateInputData(
       props.currentSave.index,
       props.currentVariable.name,
       expression
     );
     props.setCurrentSave({ index: save });
     props.setCurrentVariable({
-      name: saveData[props.currentSave.index][0].variableName,
+      name: props.saveData[props.currentSave.index][0].variableName,
       index: 0,
     });
   };
@@ -75,22 +82,26 @@ const Saves: React.FC<SavesProps> = (props) => {
   };
 
   const addNewSave = () => {
-    saveData.push([
-      {
-        variableName: "x",
-        variableComment: "Variable x",
-        variableChildren: [],
-        inputData: {
-          displayedValue: "",
-          arrayValue: ["caret"],
-        },
-        computedData: {
-          computedFormula: "",
-          computedResult: "",
-        },
-      },
-    ]);
-    updateSaves();
+    props.setSaveData((prevSaveData) => {
+      return [
+        ...prevSaveData,
+        [
+          {
+            variableName: "x",
+            variableComment: "Variable x",
+            variableChildren: [],
+            inputData: {
+              displayedValue: "",
+              arrayValue: ["caret"],
+            },
+            computedData: {
+              computedFormula: "",
+              computedResult: "",
+            },
+          },
+        ],
+      ];
+    });
     switchSave(saves.length);
   };
 
@@ -119,13 +130,14 @@ const Saves: React.FC<SavesProps> = (props) => {
       <SavesWrapper className="saves-elements">{savesElements}</SavesWrapper>
       <i className="fa-solid fa-plus add-save-button" onClick={addNewSave}></i>
       {deleteDialogueIsShown && (
-        <DeleteDialogue
+        <DeleteSaveDialogue
+          saveData={props.saveData}
+          setSaveData={props.setSaveData}
           assignedSave={assignedFormSave}
           position={cursorClickPosition}
           setCurrentSave={props.setCurrentSave}
           setCurrentVariable={props.setCurrentVariable}
           closeDeleteSaveDialogue={closeDeleteSaveDialogue}
-          updateSaves={updateSaves}
         />
       )}
     </div>

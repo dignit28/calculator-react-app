@@ -1,18 +1,19 @@
 import React from "react";
-import { saveData } from "../../data/saveData";
 // Types
-import { CurrentSaveState, CurrentVariableState } from "../../App";
-// Styles
 import {
-  ModalWrapper,
-  FocusTrap,
-} from "../../misc_styles/Modals.styles";
+  CurrentSaveState,
+  CurrentVariableState,
+  SaveDataState,
+} from "../../App";
+// Styles
+import { ModalWrapper, FocusTrap } from "../../misc_styles/Modals.styles";
 
 type DeleteSaveDialogueProps = {
+  saveData: SaveDataState;
+  setSaveData: React.Dispatch<React.SetStateAction<SaveDataState>>;
   assignedSave: number;
   position: [number, number];
   closeDeleteSaveDialogue: () => void;
-  updateSaves: () => void;
   setCurrentSave: React.Dispatch<React.SetStateAction<CurrentSaveState>>;
   setCurrentVariable: React.Dispatch<
     React.SetStateAction<CurrentVariableState>
@@ -42,13 +43,16 @@ const DeleteSaveDialogue: React.FC<DeleteSaveDialogueProps> = (props) => {
   };
 
   const deleteSave = () => {
-    saveData.splice(props.assignedSave, 1);
+    props.setSaveData((prevSaveData) => {
+      const newSaveData = [...prevSaveData];
+      newSaveData.splice(props.assignedSave, 1);
+      return newSaveData;
+    });
     props.setCurrentSave({ index: 0 });
     props.setCurrentVariable({
-      name: saveData[0][0].variableName,
+      name: props.saveData[0][0].variableName,
       index: 0,
     });
-    props.updateSaves();
     props.closeDeleteSaveDialogue();
   };
 

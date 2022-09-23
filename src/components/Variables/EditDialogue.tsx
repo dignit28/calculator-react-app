@@ -1,15 +1,17 @@
 import React from "react";
 // Styles
 import { ModalWrapper, FocusTrap } from "../../misc_styles/Modals.styles";
-// Functions
-import { findVariableIndex } from "../../data/saveData";
-// Data
-import { saveData } from "../../data/saveData";
 import { BANNED_VARIABLE_NAMES } from "../../data/bannedVariableNames";
 //Types
-import { CurrentSaveState, CurrentVariableState } from "../../App";
+import {
+  CurrentSaveState,
+  CurrentVariableState,
+  SaveDataState,
+} from "../../App";
 
 type EditFormProps = {
+  saveData: SaveDataState;
+  setSaveData: React.Dispatch<React.SetStateAction<SaveDataState>>;
   formType: string;
   assignedVariable: string;
   onKeyDown: (e: any) => void;
@@ -21,6 +23,7 @@ type EditFormProps = {
     React.SetStateAction<CurrentVariableState>
   >;
   currentSave: CurrentSaveState;
+  findVariableIndex: (save: number, variable: string) => number;
 };
 
 const EditForm: React.FC<EditFormProps> = (props) => {
@@ -29,8 +32,11 @@ const EditForm: React.FC<EditFormProps> = (props) => {
     variableComment:
       props.formType === "new"
         ? ""
-        : saveData[props.currentSave.index][
-            findVariableIndex(props.currentSave.index, props.assignedVariable)
+        : props.saveData[props.currentSave.index][
+            props.findVariableIndex(
+              props.currentSave.index,
+              props.assignedVariable
+            )
           ].variableComment,
   });
 
@@ -57,7 +63,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
     props.updateVariables();
     props.setCurrentVariable({
       name: variableName,
-      index: findVariableIndex(props.currentSave.index, variableName),
+      index: props.findVariableIndex(props.currentSave.index, variableName),
     });
     props.closeEditForm();
   };
@@ -69,25 +75,29 @@ const EditForm: React.FC<EditFormProps> = (props) => {
       formData.variableName.match(/^[a-z]$/i) &&
       !BANNED_VARIABLE_NAMES.includes(formData.variableName)
     ) {
-      const existingVariables = saveData[props.currentSave.index].map(
+      const existingVariables = props.saveData[props.currentSave.index].map(
         (variableData) => {
           return variableData.variableName;
         }
       );
       // Check if new variable name is not taken
       if (!existingVariables.includes(formData.variableName)) {
-        saveData[props.currentSave.index].push({
-          variableName: formData.variableName,
-          variableComment: formData.variableComment,
-          variableChildren: [],
-          inputData: {
-            displayedValue: "",
-            arrayValue: ["caret"],
-          },
-          computedData: {
-            computedFormula: "",
-            computedResult: "",
-          },
+        props.setSaveData((prevSaveData) => {
+          const newSaveData = [...prevSaveData];
+          newSaveData[props.currentSave.index].push({
+            variableName: formData.variableName,
+            variableComment: formData.variableComment,
+            variableChildren: [],
+            inputData: {
+              displayedValue: "",
+              arrayValue: ["caret"],
+            },
+            computedData: {
+              computedFormula: "",
+              computedResult: "",
+            },
+          });
+          return newSaveData;
         });
 
         closeFormCleanup(formData.variableName);
@@ -104,7 +114,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
       newVariableName.match(/^[a-z]$/i) &&
       !BANNED_VARIABLE_NAMES.includes(newVariableName)
     ) {
-      const existingVariables = saveData[props.currentSave.index].map(
+      const existingVariables = props.saveData[props.currentSave.index].map(
         (variableData) => {
           return variableData.variableName;
         }
@@ -118,8 +128,8 @@ const EditForm: React.FC<EditFormProps> = (props) => {
         // Iterate over every variable to fix dependencies
         existingVariables.forEach((variable) => {
           const variableData =
-            saveData[props.currentSave.index][
-              findVariableIndex(props.currentSave.index, variable)
+            props.saveData[props.currentSave.index][
+              props.findVariableIndex(props.currentSave.index, variable)
             ];
           const childrenOfVariable = variableData.variableChildren;
           // If the changing variable is in child list of current variable,
@@ -165,12 +175,22 @@ const EditForm: React.FC<EditFormProps> = (props) => {
           }
         });
         // After editing dependent variables, fix the variable itself
-        saveData[props.currentSave.index][
-          findVariableIndex(props.currentSave.index, props.assignedVariable)
-        ].variableComment = newVariableComment;
-        saveData[props.currentSave.index][
-          findVariableIndex(props.currentSave.index, props.assignedVariable)
-        ].variableName = newVariableName;
+        props.setSaveData((prevSaveData) => {
+          const newSaveData = [...prevSaveData];
+          newSaveData[props.currentSave.index][
+            props.findVariableIndex(
+              props.currentSave.index,
+              props.assignedVariable
+            )
+          ].variableComment = newVariableComment;
+          newSaveData[props.currentSave.index][
+            props.findVariableIndex(
+              props.currentSave.index,
+              props.assignedVariable
+            )
+          ].variableName = newVariableName;
+          return newSaveData;
+        });
 
         closeFormCleanup(newVariableName);
       }
@@ -187,7 +207,6 @@ const EditForm: React.FC<EditFormProps> = (props) => {
         className="edit-form"
         cursorX={props.position[0]}
         cursorY={props.position[1]}
-        onSubmit={props.formType === "new" ? createNewVariable : editVariable}
         onMouseDown={(e) => {
           e.preventDefault();
         }}
@@ -214,7 +233,10 @@ const EditForm: React.FC<EditFormProps> = (props) => {
             e.stopPropagation();
           }}
         />
-        <button className="confirm-button">
+        <button
+          className="confirm-button"
+          onClick={props.formType === "new" ? createNewVariable : editVariable}
+        >
           {props.formType === "new" ? "Create" : "Edit"}
         </button>
       </ModalWrapper>

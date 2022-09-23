@@ -1,25 +1,33 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
-import {
-  findVariableIndex,
-  saveData,
-  updateInputData,
-} from "../../data/saveData";
 import EditForm from "./EditDialogue";
 import DeleteVariableDialogue from "./DeleteVariableDialogue";
 // Interfaces
-import { VariableData } from "../../data/saveData";
+import { VariableData } from "../../utility/interfaces";
 // Types
-import { CurrentSaveState, CurrentVariableState } from "../../App";
+import {
+  CurrentSaveState,
+  CurrentVariableState,
+  SaveDataState,
+} from "../../App";
 // Styles
 import VariablesWrapper from "./Variables.styles";
 
 type VariablesProps = {
+  saveData: SaveDataState;
+  setSaveData: React.Dispatch<React.SetStateAction<SaveDataState>>;
   currentVariable: CurrentVariableState;
   currentSave: CurrentSaveState;
   setCurrentVariable: React.Dispatch<
     React.SetStateAction<CurrentVariableState>
   >;
+  updateInputData: (
+    save: number,
+    variable: string,
+    newInputValue: string
+  ) => void;
+  findVariableIndex: (save: number, variable: string) => number;
+  getParentVariables: (save: number, variable: string) => string[];
 };
 
 const Variables: React.FC<VariablesProps> = (props) => {
@@ -30,7 +38,7 @@ const Variables: React.FC<VariablesProps> = (props) => {
     [number, number]
   >([0, 0]);
   const [variables, setVariables] = React.useState<VariableData[]>(
-    saveData[props.currentSave.index]
+    props.saveData[props.currentSave.index]
   );
   const [deleteDialogueIsShown, setDeleteDialogueIsShown] =
     React.useState(false);
@@ -44,7 +52,7 @@ const Variables: React.FC<VariablesProps> = (props) => {
   }, [editIsShown, deleteDialogueIsShown]);
 
   React.useEffect(() => {
-    setVariables(saveData[props.currentSave.index]);
+    setVariables(props.saveData[props.currentSave.index]);
   }, [props.currentSave]);
 
   const openEditForm = (event: React.MouseEvent) => {
@@ -89,21 +97,21 @@ const Variables: React.FC<VariablesProps> = (props) => {
   };
 
   const updateVariables = () => {
-    setVariables(saveData[props.currentSave.index]);
+    setVariables(props.saveData[props.currentSave.index]);
   };
 
   const handleButtonClick = (variable: string) => {
     const calculatorInputElement: HTMLInputElement =
       document.querySelector(".calculator-input")!;
     const expression = calculatorInputElement.value;
-    updateInputData(
+    props.updateInputData(
       props.currentSave.index,
       props.currentVariable.name,
       expression
     );
     props.setCurrentVariable({
       name: variable,
-      index: findVariableIndex(props.currentSave.index, variable),
+      index: props.findVariableIndex(props.currentSave.index, variable),
     });
   };
 
@@ -161,6 +169,8 @@ const Variables: React.FC<VariablesProps> = (props) => {
       </VariablesWrapper>
       {editIsShown && (
         <EditForm
+          saveData={props.saveData}
+          setSaveData={props.setSaveData}
           formType={formType}
           assignedVariable={assignedFormVariable}
           onKeyDown={onKeyDown}
@@ -170,10 +180,13 @@ const Variables: React.FC<VariablesProps> = (props) => {
           closeEditForm={closeEditForm}
           setCurrentVariable={props.setCurrentVariable}
           currentSave={props.currentSave}
+          findVariableIndex={props.findVariableIndex}
         />
       )}
       {deleteDialogueIsShown && (
         <DeleteVariableDialogue
+          saveData={props.saveData}
+          setSaveData={props.setSaveData}
           assignedVariable={assignedFormVariable}
           onKeyDown={onKeyDown}
           onClickOutside={onClickOutside}
@@ -183,6 +196,8 @@ const Variables: React.FC<VariablesProps> = (props) => {
           currentVariable={props.currentVariable}
           setCurrentVariable={props.setCurrentVariable}
           currentSave={props.currentSave}
+          findVariableIndex={props.findVariableIndex}
+          getParentVariables={props.getParentVariables}
         />
       )}
     </div>

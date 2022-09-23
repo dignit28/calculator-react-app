@@ -2,14 +2,20 @@
 import { ExpressionTokenType } from "../utility/enums";
 // Data
 import { BANNED_VARIABLE_NAMES } from "../data/bannedVariableNames";
-import { saveData } from "../data/saveData";
-// Functions
-import { updateVariableChildren, findVariableIndex } from "../data/saveData";
+// Types
+import { SaveDataState } from "../App";
 
 export function validateVariables(
   save: number,
   parentVariable: string,
-  expression: string
+  expression: string,
+  findVariableIndex: (save: number, variable: string) => number,
+  updateVariableChildren: (
+    save: number,
+    parentVariable: string,
+    expression: string
+  ) => void,
+  saveData: SaveDataState
 ): boolean {
   const arrayedExpression: string[] = expression.split("");
   const variablesInExpression = Array.from(
@@ -72,7 +78,8 @@ export function validateVariables(
           acc &&
           checkChildrenVariables(
             variableToCheck,
-            saveData[save][findVariableIndex(save, childVariable)].variableChildren
+            saveData[save][findVariableIndex(save, childVariable)]
+              .variableChildren
           )
         );
       }, true);

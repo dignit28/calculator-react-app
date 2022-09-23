@@ -1,20 +1,22 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import { MathJax } from "better-react-mathjax";
-// Functions
-import { findVariableIndex } from "../../data/saveData";
-// Data
-import { saveData } from "../../data/saveData";
 // Styles
 import { ChildVariablesWrapper, FormulasWrapper } from "./Formulas.styles";
 //Types
-import { CurrentSaveState, CurrentVariableState } from "../../App";
+import {
+  CurrentSaveState,
+  CurrentVariableState,
+  SaveDataState,
+} from "../../App";
 
 type FormulasProps = {
   computedFormula: string;
   computedResult: string;
   currentSave: CurrentSaveState;
   currentVariable: CurrentVariableState;
+  findVariableIndex: (save: number, variable: string) => number;
+  saveData: SaveDataState;
 };
 
 const fixASCIIMathRendering = (expression: string) => {
@@ -26,12 +28,12 @@ const fixASCIIMathRendering = (expression: string) => {
 };
 
 const Formulas: React.FC<FormulasProps> = (props) => {
-  const childVariableElements = saveData[props.currentSave.index][
+  const childVariableElements = props.saveData[props.currentSave.index][
     props.currentVariable.index
   ].variableChildren.map((childVariable) => {
     const variableComment =
-      saveData[props.currentSave.index][
-        findVariableIndex(props.currentSave.index, childVariable)
+      props.saveData[props.currentSave.index][
+        props.findVariableIndex(props.currentSave.index, childVariable)
       ].variableComment;
     return (
       <li key={uuidv4()}>

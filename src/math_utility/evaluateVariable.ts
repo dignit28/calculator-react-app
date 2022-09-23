@@ -1,15 +1,24 @@
 import switchVariablesToValues from "../math_utility/switchVariablesToValues";
 import { calculateRPN } from "../math_utility/evaluationRPN";
-import { updateFormulaData } from "../data/saveData";
+import { ComputedFormulaState, SaveDataState } from "../App";
 
 export default function evaluateVariable(
   save: number,
   currentVariable: string,
-  expressionToCalculate: string
+  expressionToCalculate: string,
+  updateFormulaData: (
+    save: number,
+    variable: string,
+    newComputedData: ComputedFormulaState
+  ) => void,
+  findVariableIndex: (save: number, variable: string) => number,
+  saveData: SaveDataState
 ) {
   const expressionToCalculateOnlyValues = switchVariablesToValues(
     save,
-    expressionToCalculate
+    expressionToCalculate,
+    findVariableIndex,
+    saveData
   );
   const finalResult = calculateRPN(expressionToCalculateOnlyValues);
   const resultingFormula = {

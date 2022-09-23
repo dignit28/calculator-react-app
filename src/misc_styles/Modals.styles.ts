@@ -5,7 +5,7 @@ type ModalWrapperProps = {
   cursorY: number;
 };
 
-export const ModalWrapper = styled.form<ModalWrapperProps>`
+export const ModalWrapper = styled.div<ModalWrapperProps>`
   position: fixed;
   display: flex;
   flex-direction: column;

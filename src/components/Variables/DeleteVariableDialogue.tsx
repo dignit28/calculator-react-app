@@ -1,14 +1,16 @@
 import React from "react";
 // Styles
 import { ModalWrapper, FocusTrap } from "../../misc_styles/Modals.styles";
-// Data
-import { saveData } from "../../data/saveData";
-// Functions
-import { findVariableIndex, getParentVariables } from "../../data/saveData";
 //Types
-import { CurrentSaveState, CurrentVariableState } from "../../App";
+import {
+  CurrentSaveState,
+  CurrentVariableState,
+  SaveDataState,
+} from "../../App";
 
 type DeleteVariableDialogueProps = {
+  saveData: SaveDataState;
+  setSaveData: React.Dispatch<React.SetStateAction<SaveDataState>>;
   assignedVariable: string;
   onKeyDown: (e: any) => void;
   onClickOutside: (e: any) => void;
@@ -20,12 +22,14 @@ type DeleteVariableDialogueProps = {
     React.SetStateAction<CurrentVariableState>
   >;
   currentSave: CurrentSaveState;
+  findVariableIndex: (save: number, variable: string) => number;
+  getParentVariables: (save: number, variable: string) => string[];
 };
 
 const DeleteVariableDialogue: React.FC<DeleteVariableDialogueProps> = (
   props
 ) => {
-  const assignedVariableParents = getParentVariables(
+  const assignedVariableParents = props.getParentVariables(
     props.currentSave.index,
     props.assignedVariable
   );
@@ -34,25 +38,25 @@ const DeleteVariableDialogue: React.FC<DeleteVariableDialogueProps> = (
     props.updateVariables();
     props.setCurrentVariable({
       name: variableName,
-      index: findVariableIndex(props.currentSave.index, variableName),
+      index: props.findVariableIndex(props.currentSave.index, variableName),
     });
     props.closeDeleteVariableDialogue();
   };
 
   const deleteVariable = () => {
-    const variableIndex = findVariableIndex(
+    const variableIndex = props.findVariableIndex(
       props.currentSave.index,
       props.assignedVariable
     );
-    const parentVariables = getParentVariables(
+    const parentVariables = props.getParentVariables(
       props.currentSave.index,
       props.assignedVariable
     );
 
     parentVariables.forEach((parent) => {
       const parentSaveData =
-        saveData[props.currentSave.index][
-          findVariableIndex(props.currentSave.index, parent)
+        props.saveData[props.currentSave.index][
+          props.findVariableIndex(props.currentSave.index, parent)
         ];
       const indexOfChild = parentSaveData.variableChildren.indexOf(
         props.assignedVariable
@@ -66,18 +70,23 @@ const DeleteVariableDialogue: React.FC<DeleteVariableDialogueProps> = (
         computedResult: "Invalid input",
       };
     });
-    saveData[props.currentSave.index].splice(variableIndex, 1);
+
+    props.setSaveData((prevSaveData) => {
+      const newSaveData = [...prevSaveData];
+      newSaveData[props.currentSave.index].splice(variableIndex, 1);
+      return newSaveData;
+    });
 
     const indexOfVariableToSet =
       props.assignedVariable === props.currentVariable.name
         ? 0
-        : findVariableIndex(
+        : props.findVariableIndex(
             props.currentSave.index,
             props.currentVariable.name
           );
 
     closeFormCleanup(
-      saveData[props.currentSave.index][indexOfVariableToSet].variableName
+      props.saveData[props.currentSave.index][indexOfVariableToSet].variableName
     );
   };
 
@@ -104,7 +113,9 @@ const DeleteVariableDialogue: React.FC<DeleteVariableDialogueProps> = (
             <p className="modal-explanatory-text">
               ! Some variables are dependent on "{props.assignedVariable}":
             </p>
-            <p className="modal-explanatory-text modal-variable-list">{assignedVariableParents.join(", ")}</p>
+            <p className="modal-explanatory-text modal-variable-list">
+              {assignedVariableParents.join(", ")}
+            </p>
           </>
         )}
         <button onClick={props.closeDeleteVariableDialogue}>Cancel</button>

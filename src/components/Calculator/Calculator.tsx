@@ -6,13 +6,6 @@ import {
   validateExpression,
   validateVariables,
 } from "../../math_utility/validateExpression";
-import {
-  updateInputData,
-  updateFormulaData,
-  saveData,
-  findVariableIndex,
-  getParentVariables,
-} from "../../data/saveData";
 import evaluateVariable from "../../math_utility/evaluateVariable";
 // Data
 import buttons from "../../data/buttons";
@@ -22,24 +15,45 @@ import {
   ComputedFormulaState,
   CurrentSaveState,
   CurrentVariableState,
+  SaveDataState,
 } from "../../App";
 
 type CalculatorProps = {
+  saveData: SaveDataState;
   setComputedFormula: React.Dispatch<
     React.SetStateAction<ComputedFormulaState>
   >;
   currentSave: CurrentSaveState;
   currentVariable: CurrentVariableState;
+  updateInputData: (
+    save: number,
+    variable: string,
+    newInputValue: string
+  ) => void;
+  findVariableIndex: (save: number, variable: string) => number;
+  updateFormulaData: (
+    save: number,
+    variable: string,
+    newComputedData: ComputedFormulaState
+  ) => void;
+  updateVariableChildren: (
+    save: number,
+    parentVariable: string,
+    expression: string
+  ) => void;
+  getParentVariables: (save: number, variable: string) => string[];
 };
 
 const Calculator: React.FC<CalculatorProps> = (props) => {
   const [expression, setExpression] = React.useState<ExpressionState>(
-    saveData[props.currentSave.index][props.currentVariable.index].inputData
+    props.saveData[props.currentSave.index][props.currentVariable.index]
+      .inputData
   );
 
   React.useEffect(() => {
     setExpression(
-      saveData[props.currentSave.index][props.currentVariable.index].inputData
+      props.saveData[props.currentSave.index][props.currentVariable.index]
+        .inputData
     );
   }, [props.currentVariable, props.currentSave]);
 
@@ -68,16 +82,22 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
           validateVariables(
             props.currentSave.index,
             props.currentVariable.name,
-            expressionToCalculate
+            expressionToCalculate,
+            props.findVariableIndex,
+            props.updateVariableChildren,
+            props.saveData
           )
         ) {
           const resultingFormula = evaluateVariable(
             props.currentSave.index,
             props.currentVariable.name,
-            expressionToCalculate
+            expressionToCalculate,
+            props.updateFormulaData,
+            props.findVariableIndex,
+            props.saveData
           );
 
-          const evaluationArray = getParentVariables(
+          const evaluationArray = props.getParentVariables(
             props.currentSave.index,
             props.currentVariable.name
           );
@@ -87,9 +107,15 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
             evaluateVariable(
               props.currentSave.index,
               currentVariable!,
-              saveData[props.currentSave.index][
-                findVariableIndex(props.currentSave.index, currentVariable!)
-              ].computedData.computedFormula
+              props.saveData[props.currentSave.index][
+                props.findVariableIndex(
+                  props.currentSave.index,
+                  currentVariable!
+                )
+              ].computedData.computedFormula,
+              props.updateFormulaData,
+              props.findVariableIndex,
+              props.saveData
             );
           }
 
@@ -99,14 +125,14 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
             computedFormula: "Invalid input",
             computedResult: "Invalid input",
           };
-          updateFormulaData(
+          props.updateFormulaData(
             props.currentSave.index,
             props.currentVariable.name,
             invalidFormulaData
           );
           props.setComputedFormula(invalidFormulaData);
         }
-        updateInputData(
+        props.updateInputData(
           props.currentSave.index,
           props.currentVariable.name,
           expression.displayedValue
