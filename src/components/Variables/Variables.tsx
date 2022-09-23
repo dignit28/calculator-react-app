@@ -5,7 +5,7 @@ import {
   saveData,
   updateInputData,
 } from "../../data/saveData";
-import EditForm from "./EditForm";
+import EditForm from "./EditDialogue";
 import DeleteVariableDialogue from "./DeleteVariableDialogue";
 // Interfaces
 import { VariableData } from "../../data/saveData";

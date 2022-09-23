@@ -1,6 +1,6 @@
 import React from "react";
 // Styles
-import { EditFormWrapper, FocusTrap } from "../../misc_styles/Forms.styles";
+import { ModalWrapper, FocusTrap } from "../../misc_styles/Modals.styles";
 // Functions
 import { findVariableIndex } from "../../data/saveData";
 // Data
@@ -181,7 +181,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
       onKeyDown={props.onKeyDown}
       onMouseDown={props.onClickOutside}
     >
-      <EditFormWrapper
+      <ModalWrapper
         className="edit-form"
         cursorX={props.position[0]}
         cursorY={props.position[1]}
@@ -215,7 +215,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
         <button className="confirm-button">
           {props.formType === "new" ? "Create" : "Edit"}
         </button>
-      </EditFormWrapper>
+      </ModalWrapper>
     </FocusTrap>
   );
 };

@@ -4,9 +4,9 @@ import { saveData } from "../../data/saveData";
 import { CurrentSaveState, CurrentVariableState } from "../../App";
 // Styles
 import {
-  DeleteDialogueWrapper,
+  ModalWrapper,
   FocusTrap,
-} from "../../misc_styles/Forms.styles";
+} from "../../misc_styles/Modals.styles";
 
 type DeleteSaveDialogueProps = {
   assignedSave: number;
@@ -58,19 +58,19 @@ const DeleteSaveDialogue: React.FC<DeleteSaveDialogueProps> = (props) => {
       onKeyDown={onKeyDown}
       onMouseDown={onClickOutside}
     >
-      <DeleteDialogueWrapper
+      <ModalWrapper
         cursorX={props.position[0]}
         cursorY={props.position[1]}
         onMouseDown={(e) => {
           e.preventDefault();
         }}
       >
-        <p>ARE YOU SURE</p>
+        <p>Do you want to delete save {props.assignedSave + 1}?</p>
         <button onClick={props.closeDeleteSaveDialogue}>Cancel</button>
         <button className="confirm-button" onClick={deleteSave}>
           Confirm
         </button>
-      </DeleteDialogueWrapper>
+      </ModalWrapper>
     </FocusTrap>
   );
 };

@@ -1,9 +1,6 @@
 import React from "react";
 // Styles
-import {
-  DeleteDialogueWrapper,
-  FocusTrap,
-} from "../../misc_styles/Forms.styles";
+import { ModalWrapper, FocusTrap } from "../../misc_styles/Modals.styles";
 // Data
 import { saveData } from "../../data/saveData";
 // Functions
@@ -28,6 +25,11 @@ type DeleteVariableDialogueProps = {
 const DeleteVariableDialogue: React.FC<DeleteVariableDialogueProps> = (
   props
 ) => {
+  const assignedVariableParents = getParentVariables(
+    props.currentSave.index,
+    props.assignedVariable
+  );
+
   const closeFormCleanup = (variableName: string) => {
     props.updateVariables();
     props.setCurrentVariable({
@@ -86,19 +88,31 @@ const DeleteVariableDialogue: React.FC<DeleteVariableDialogueProps> = (
       onKeyDown={props.onKeyDown}
       onMouseDown={props.onClickOutside}
     >
-      <DeleteDialogueWrapper
+      <ModalWrapper
         cursorX={props.position[0]}
         cursorY={props.position[1]}
         onMouseDown={(e) => {
           e.preventDefault();
         }}
       >
-        <p>ARE YOU SURE</p>
+        <p>Do you want to delete variable {props.assignedVariable}?</p>
+        {assignedVariableParents.length === 0 ? (
+          <p className="modal-explanatory-text">
+            {"\u2713"} "{props.assignedVariable}" has no parents
+          </p>
+        ) : (
+          <>
+            <p className="modal-explanatory-text">
+              ! Some variables are dependent on "{props.assignedVariable}":
+            </p>
+            <p className="modal-explanatory-text modal-variable-list">{assignedVariableParents.join(", ")}</p>
+          </>
+        )}
         <button onClick={props.closeDeleteVariableDialogue}>Cancel</button>
         <button className="confirm-button" onClick={deleteVariable}>
           Confirm
         </button>
-      </DeleteDialogueWrapper>
+      </ModalWrapper>
     </FocusTrap>
   );
 };
