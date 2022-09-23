@@ -10,6 +10,9 @@ export const GlobalStyle = createGlobalStyle`
     align-items: center;
     background-color: rgb(221, 239, 245);
     border-bottom: solid 2px rgb(138, 173, 184);
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(58, 62, 65);
+    font-weight: bold;
 
     .add-save-button {
       padding-left: 3px;
@@ -32,8 +35,12 @@ export const GlobalStyle = createGlobalStyle`
     position: fixed;
     height: 100%;
     width: 80px;
+    padding-bottom: 21px;
     background-color: rgb(221, 239, 245);
     border-right: solid 2px rgb(138, 173, 184);
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(58, 62, 65);
+    font-weight: bold;
   }
 
   .main-content {
@@ -41,7 +48,6 @@ export const GlobalStyle = createGlobalStyle`
     left: 82px;
     height: 100%;
     width: 100%;
-    height: 100%;
     background-color: rgb(248, 248, 248);
     z-index: -1;
   }
@@ -52,6 +58,9 @@ export const GlobalStyle = createGlobalStyle`
     width: 35%;
     height: 100%;
     border-right: solid 2px rgb(138, 173, 184);
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(58, 62, 65);
+    font-weight: bold;
   }
 
   .formulas-component {

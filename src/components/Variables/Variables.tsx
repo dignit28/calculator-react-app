@@ -156,14 +156,14 @@ const Variables: React.FC<VariablesProps> = (props) => {
 
   return (
     <div className="variables-component">
-      <aside>
-        <VariablesWrapper>
+      <VariablesWrapper>
+        <ul>
           {variableElements}
           <li onClick={(event) => newVariable(event)}>
             <i className="fa-solid fa-plus add-save-button"></i>
           </li>
-        </VariablesWrapper>
-      </aside>
+        </ul>
+      </VariablesWrapper>
       {editIsShown && (
         <EditForm
           formType={formType}

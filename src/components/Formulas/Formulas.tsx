@@ -47,19 +47,21 @@ const Formulas: React.FC<FormulasProps> = (props) => {
           <p>Invalid input</p>
         ) : (
           <>
-            <div>
-              <MathJax inline dynamic>
-                {`$
+            <MathJax dynamic className="mathjax-formula">
+              {`$
       ${props.computedFormula === "" ? "" : props.currentVariable.name + "="}
       ${fixASCIIMathRendering(props.computedFormula)}
       ${props.computedFormula === "" ? "" : "="}
       ${fixASCIIMathRendering(props.computedResult)}
       $`}
-              </MathJax>
-            </div>
-            <ChildVariablesWrapper>
-              {childVariableElements}
-            </ChildVariablesWrapper>
+            </MathJax>
+            {childVariableElements.length > 0 ? (
+              <ChildVariablesWrapper>
+                {childVariableElements}
+              </ChildVariablesWrapper>
+            ) : (
+              ""
+            )}
           </>
         )}
       </FormulasWrapper>

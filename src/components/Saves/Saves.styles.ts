@@ -38,15 +38,11 @@ const SavesWrapper = styled.ul`
     }
 
     p {
-      font-family: Arial, Helvetica, sans-serif;
-      color: rgb(58, 62, 65);
-      font-weight: bold;
       margin-right: auto;
       overflow: hidden;
     }
 
     i {
-      color: rgb(58, 62, 65);
       font-size: 14px;
       transition: all 250ms;
       -webkit-transition: all 250ms;
