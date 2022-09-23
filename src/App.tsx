@@ -6,6 +6,7 @@ import Variables from "./components/Variables/Variables";
 import { MathJaxContext } from "better-react-mathjax";
 import { GlobalStyle } from "./App.styles";
 import { VariableData } from "./utility/interfaces";
+import { saveDataInit } from "./data/saveDataInit";
 
 const config = {
   loader: { load: ["input/asciimath"] },
@@ -42,23 +43,7 @@ export type ComputedFormulaState = {
 function App() {
   const [saveData, setSaveData] = React.useState<SaveDataState>(
     () =>
-      JSON.parse(localStorage.getItem("calculatorSaveData")!) || [
-        [
-          {
-            variableName: "x",
-            variableComment: "Variable x",
-            variableChildren: [],
-            inputData: {
-              displayedValue: "",
-              arrayValue: ["caret"],
-            },
-            computedData: {
-              computedFormula: "",
-              computedResult: "",
-            },
-          },
-        ],
-      ]
+      JSON.parse(localStorage.getItem("calculatorSaveData")!) || saveDataInit
   );
 
   React.useEffect(() => {

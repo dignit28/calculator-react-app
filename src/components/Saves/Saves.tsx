@@ -88,7 +88,7 @@ const Saves: React.FC<SavesProps> = (props) => {
         [
           {
             variableName: "x",
-            variableComment: "Variable x",
+            variableComment: "",
             variableChildren: [],
             inputData: {
               displayedValue: "",

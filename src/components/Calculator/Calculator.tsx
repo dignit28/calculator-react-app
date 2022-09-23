@@ -57,9 +57,6 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
     );
   }, [props.currentVariable, props.currentSave]);
 
-  const inputField: HTMLInputElement | null =
-    document.querySelector(".calculator-input");
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const newDisplayedValue: string = event.target.value.replace(
       /[^0-9a-z+\-*/^.)(]+/gi,
@@ -76,7 +73,7 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
   const handleButtonClick = (value: string): void => {
     switch (value) {
       case "evaluate": // Process evaluation
-        const expressionToCalculate = inputField!.value;
+        const expressionToCalculate = expression.displayedValue;
         if (
           validateExpression(expressionToCalculate) &&
           validateVariables(
@@ -120,6 +117,7 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
           }
 
           props.setComputedFormula(resultingFormula);
+          console.log(JSON.stringify(props.saveData));
         } else {
           const invalidFormulaData = {
             computedFormula: "Invalid input",

@@ -49,6 +49,11 @@ const Formulas: React.FC<FormulasProps> = (props) => {
           <p>Invalid input</p>
         ) : (
           <>
+            <p>
+              {props.saveData[props.currentSave.index][
+                props.currentVariable.index
+              ].variableComment || "Variable " + props.currentVariable.name}
+            </p>
             <MathJax dynamic className="mathjax-formula">
               {`$
       ${props.computedFormula === "" ? "" : props.currentVariable.name + "="}
