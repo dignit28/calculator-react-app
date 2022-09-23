@@ -5,6 +5,26 @@ import { CalculatorButton } from "../utility/interfaces";
 const buttons: CalculatorButton[] = [
   {
     id: uuidv4(),
+    text: "(",
+    value: "(",
+  },
+  {
+    id: uuidv4(),
+    text: ")",
+    value: ")",
+  },
+  {
+    id: uuidv4(),
+    text: "/",
+    value: "/",
+  },
+  {
+    id: uuidv4(),
+    text: "<",
+    value: "delete",
+  },
+  {
+    id: uuidv4(),
     text: "1",
     value: "1",
   },
@@ -17,6 +37,11 @@ const buttons: CalculatorButton[] = [
     id: uuidv4(),
     text: "3",
     value: "3",
+  },
+  {
+    id: uuidv4(),
+    text: "*",
+    value: "*",
   },
   {
     id: uuidv4(),
@@ -35,6 +60,11 @@ const buttons: CalculatorButton[] = [
   },
   {
     id: uuidv4(),
+    text: "-",
+    value: "-",
+  },
+  {
+    id: uuidv4(),
     text: "7",
     value: "7",
   },
@@ -50,42 +80,22 @@ const buttons: CalculatorButton[] = [
   },
   {
     id: uuidv4(),
-    text: "0",
-    value: "0",
-  },
-  {
-    id: uuidv4(),
     text: "+",
     value: "+",
   },
   {
     id: uuidv4(),
-    text: "-",
-    value: "-",
+    text: ".",
+    value: ".",
   },
   {
     id: uuidv4(),
-    text: "*",
-    value: "*",
+    text: "0",
+    value: "0",
   },
   {
     id: uuidv4(),
-    text: "/",
-    value: "/",
-  },
-  {
-    id: uuidv4(),
-    text: "(",
-    value: "(",
-  },
-  {
-    id: uuidv4(),
-    text: ")",
-    value: ")",
-  },
-  {
-    id: uuidv4(),
-    text: ["x", <sup key="button-exponent-text-id">y</sup>],
+    text: ["x", <sup key={uuidv4()}>y</sup>],
     value: "^",
   },
   {

@@ -4,7 +4,7 @@ export const saveDataInit: SaveDataState = [
   [
     {
       variableName: "x",
-      variableComment: "Sample Save, This is its' main variable",
+      variableComment: "Sample Save, this is its main variable.",
       variableChildren: ["y", "z"],
       inputData: {
         displayedValue: "24*(y*z)/5^-2/8/3",
@@ -36,7 +36,7 @@ export const saveDataInit: SaveDataState = [
     },
     {
       variableName: "y",
-      variableComment: "Float exponent, negative base",
+      variableComment: "Float exponent, negative base.",
       variableChildren: [],
       inputData: {
         displayedValue: "-8^0.2",
@@ -49,7 +49,7 @@ export const saveDataInit: SaveDataState = [
     },
     {
       variableName: "z",
-      variableComment: "Fractional exponent, negative base",
+      variableComment: "Fractional exponent, negative base.",
       variableChildren: [],
       inputData: {
         displayedValue: "-8^(2/10)",

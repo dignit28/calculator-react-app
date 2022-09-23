@@ -11,6 +11,9 @@ export const CalculatorWrapper = styled.div`
     height: 25px;
     border: solid 1px rgb(138, 173, 184);
     background-color: rgb(173, 216, 230);
+    font-size: 16px;
+    color: rgb(58, 62, 65);
+    font-weight: bold;
 
     :focus {
       outline-color: rgb(110, 138, 147);
@@ -21,14 +24,16 @@ export const CalculatorWrapper = styled.div`
 export const ButtonsWrapper = styled.div`
   padding-top: 5px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 5px;
 
   button {
     min-height: 6vh;
     border: solid 1px rgb(138, 173, 184);
     background-color: rgb(173, 216, 230);
-    font-size: 14px;
+    font-size: 18px;
+    color: rgb(58, 62, 65);
+    font-weight: bold;
     cursor: pointer;
 
     :hover {

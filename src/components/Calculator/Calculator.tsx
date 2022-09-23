@@ -135,6 +135,27 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
           expression.displayedValue
         );
         break;
+      case "delete": // Remove input
+        const inputField: HTMLInputElement =
+          document.querySelector(".calculator-input")!;
+        setExpression((prevExpression) => {
+          if (prevExpression.arrayValue.indexOf("caret") === 0) {
+            return prevExpression;
+          }
+          const newArrayValue: string[] = [...prevExpression.arrayValue];
+          newArrayValue.splice(
+            prevExpression.arrayValue.indexOf("caret") - 1,
+            1
+          );
+          const newDisplayedValue: string = newArrayValue
+            .filter((element: string) => element !== "caret")
+            .join("");
+          return {
+            arrayValue: newArrayValue,
+            displayedValue: newDisplayedValue,
+          };
+        });
+        break;
       default: // Add input
         setExpression((prevExpression) => {
           const newArrayValue: string[] = [...prevExpression.arrayValue];
@@ -175,6 +196,50 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
     });
   };
 
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    switch (event.key) {
+      case "Left":
+      case "ArrowLeft":
+        setExpression((prevExpression) => {
+          if (prevExpression.arrayValue.indexOf("caret") === 0) {
+            return prevExpression;
+          }
+
+          const newArrayValue: string[] = [...prevExpression.arrayValue];
+          const oldCaretIndex: number =
+            prevExpression.arrayValue.indexOf("caret");
+          newArrayValue.splice(oldCaretIndex, 1);
+          newArrayValue.splice(oldCaretIndex - 1, 0, "caret");
+          return {
+            ...prevExpression,
+            arrayValue: newArrayValue,
+          };
+        });
+        break;
+      case "Right":
+      case "ArrowRight":
+        setExpression((prevExpression) => {
+          if (
+            prevExpression.arrayValue.indexOf("caret") ===
+            prevExpression.arrayValue.length
+          ) {
+            return prevExpression;
+          }
+
+          const newArrayValue: string[] = [...prevExpression.arrayValue];
+          const oldCaretIndex: number =
+            prevExpression.arrayValue.indexOf("caret");
+          newArrayValue.splice(oldCaretIndex, 1);
+          newArrayValue.splice(oldCaretIndex + 1, 0, "caret");
+          return {
+            ...prevExpression,
+            arrayValue: newArrayValue,
+          };
+        });
+        break;
+    }
+  };
+
   const buttonElements = buttons.map((button) => (
     <button key={button.id} onClick={() => handleButtonClick(button.value)}>
       {button.text}
@@ -190,6 +255,7 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
           onChange={handleChange}
           onClick={handleInputClick}
           value={expression.displayedValue}
+          onKeyDown={onKeyDown}
         />
         <ButtonsWrapper>{buttonElements}</ButtonsWrapper>
       </CalculatorWrapper>
