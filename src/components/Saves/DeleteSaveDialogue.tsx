@@ -23,6 +23,7 @@ type DeleteSaveDialogueProps = {
 const DeleteSaveDialogue: React.FC<DeleteSaveDialogueProps> = (props) => {
   const onKeyDown = (event: React.KeyboardEvent) => {
     switch (event.key) {
+      case "Esc":
       case "Escape":
         props.closeDeleteSaveDialogue();
         break;

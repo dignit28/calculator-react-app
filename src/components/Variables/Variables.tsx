@@ -75,6 +75,7 @@ const Variables: React.FC<VariablesProps> = (props) => {
 
   const onKeyDown = (event: React.KeyboardEvent) => {
     switch (event.key) {
+      case "Esc":
       case "Escape":
         closeEditForm();
         closeDeleteVariableDialogue();
