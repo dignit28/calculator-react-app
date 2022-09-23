@@ -42,6 +42,8 @@ export const GlobalStyle = createGlobalStyle`
     height: 100%;
     width: 100%;
     height: 100%;
+    background-color: rgb(248, 248, 248);
+    z-index: -1;
   }
 
   .calculator-component {
