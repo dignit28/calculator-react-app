@@ -27,7 +27,6 @@ export function negativeExponent(lhs: number, rhs: number | string) {
 
   rhs = pow.exponent!;
   if (pow.sign === "impossible") {
-    !Number.isNaN(pow.exponent) && console.log("Cannot take an odd root from negative number");
     return NaN;
   } else if (pow.sign === "positive") {
     return Math.pow(-1 * lhs, rhs);
@@ -101,7 +100,6 @@ function rationalizeFloat(targetFloat: number) {
       currentBranchFloatValue = currentBranchValue[0] / currentBranchValue[1];
     }
   } catch (error) {
-    console.log("Rationalization impractical. " + error);
     currentBranchValue = [NaN, NaN];
   }
   return currentBranchValue;

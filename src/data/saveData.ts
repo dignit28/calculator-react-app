@@ -80,8 +80,6 @@ export const updateVariableChildren = (
     )
   );
 
-  console.log(variablesInExpression);
-
   saveData[save][findVariableIndex(save, parentVariable)].variableChildren =
     variablesInExpression;
 };

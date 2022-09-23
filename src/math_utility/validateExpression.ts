@@ -33,7 +33,6 @@ export function validateVariables(
     variablesInExpression.includes(parentVariable);
 
   if (HAS_ITSELF_IN_EXPRESSION) {
-    console.log("Variable can't use itself in expression");
     cancelChildrenChange();
     return false;
   }
@@ -43,7 +42,6 @@ export function validateVariables(
   });
 
   if (HAS_BANNED_VARIABLES) {
-    console.log("Bad variable name");
     cancelChildrenChange();
     return false;
   }
@@ -57,7 +55,6 @@ export function validateVariables(
   });
 
   if (HAS_UNKNOWN_VARIABLES) {
-    console.log("Unknown variable name");
     cancelChildrenChange();
     return false;
   }
@@ -88,7 +85,6 @@ export function validateVariables(
   );
 
   if (!NO_VARIABLE_RECURSION) {
-    console.log("Some variable in expression references current variable");
     cancelChildrenChange();
     return false;
   }
@@ -252,7 +248,6 @@ export function validateExpression(expression: string): boolean {
       );
     }
   } catch (errorMessage) {
-    console.log(errorMessage);
     return false;
   }
   return true;

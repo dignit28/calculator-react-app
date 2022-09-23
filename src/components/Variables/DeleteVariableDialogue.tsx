@@ -66,7 +66,6 @@ const DeleteVariableDialogue: React.FC<DeleteVariableDialogueProps> = (
         computedResult: "Invalid input",
       };
     });
-    console.log(saveData);
     saveData[props.currentSave.index].splice(variableIndex, 1);
 
     const indexOfVariableToSet =

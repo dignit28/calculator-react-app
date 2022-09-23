@@ -34,11 +34,21 @@ const EditForm: React.FC<EditFormProps> = (props) => {
           ].variableComment,
   });
 
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleChange(
+    event: React.ChangeEvent<HTMLInputElement>,
+    isVariableInput: boolean
+  ) {
+    let newValue: string = event.target.value;
+
+    if (isVariableInput) {
+      newValue = newValue.slice(0, 1);
+      newValue = newValue.replace(/[^a-z]/i, "");
+    }
+
     setFormData((prevFormData) => {
       return {
         ...prevFormData,
-        [event.target.name]: event.target.value,
+        [event.target.name]: newValue,
       };
     });
   }
@@ -81,11 +91,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
         });
 
         closeFormCleanup(formData.variableName);
-      } else {
-        console.log("Variable with the same name already exists");
       }
-    } else {
-      console.log("Bad variable name");
     }
   };
 
@@ -167,11 +173,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
         ].variableName = newVariableName;
 
         closeFormCleanup(newVariableName);
-      } else {
-        console.log("Variable with the same name already exists");
       }
-    } else {
-      console.log("Bad variable name");
     }
   };
 
@@ -195,7 +197,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
           type="text"
           autoComplete="off"
           name="variableName"
-          onChange={handleChange}
+          onChange={(e) => handleChange(e, true)}
           value={formData.variableName}
           onMouseDown={(e) => {
             e.stopPropagation();
@@ -206,7 +208,7 @@ const EditForm: React.FC<EditFormProps> = (props) => {
           type="text"
           autoComplete="off"
           name="variableComment"
-          onChange={handleChange}
+          onChange={(e) => handleChange(e, false)}
           value={formData.variableComment}
           onMouseDown={(e) => {
             e.stopPropagation();

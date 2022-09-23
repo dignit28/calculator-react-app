@@ -105,11 +105,6 @@ const Variables: React.FC<VariablesProps> = (props) => {
       name: variable,
       index: findVariableIndex(props.currentSave.index, variable),
     });
-    console.log(
-      saveData[props.currentSave.index][
-        findVariableIndex(props.currentSave.index, variable)
-      ].variableChildren
-    );
   };
 
   const newVariable = (event: React.MouseEvent) => {

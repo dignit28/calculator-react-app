@@ -81,7 +81,6 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
             props.currentSave.index,
             props.currentVariable.name
           );
-          console.log(evaluationArray);
 
           while (evaluationArray.length !== 0) {
             const currentVariable = evaluationArray.shift();
@@ -148,7 +147,6 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
           arrayValue: newArrayValue,
         };
       } else {
-        console.log("Input field was not selected while changing it");
         return prevExpression;
       }
     });
