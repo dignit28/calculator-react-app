@@ -117,7 +117,6 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
           }
 
           props.setComputedFormula(resultingFormula);
-          console.log(JSON.stringify(props.saveData));
         } else {
           const invalidFormulaData = {
             computedFormula: "Invalid input",
