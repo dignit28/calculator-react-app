@@ -72,17 +72,19 @@ function App() {
             currentSave={currentSave}
             setCurrentVariable={setCurrentVariable}
           />
-          <Calculator
-            setComputedFormula={setComputedFormula}
-            currentSave={currentSave}
-            currentVariable={currentVariable}
-          />
-          <Formulas
-            computedFormula={computedFormula.computedFormula}
-            computedResult={computedFormula.computedResult}
-            currentSave={currentSave}
-            currentVariable={currentVariable}
-          />
+          <main className="main-content">
+            <Calculator
+              setComputedFormula={setComputedFormula}
+              currentSave={currentSave}
+              currentVariable={currentVariable}
+            />
+            <Formulas
+              computedFormula={computedFormula.computedFormula}
+              computedResult={computedFormula.computedResult}
+              currentSave={currentSave}
+              currentVariable={currentVariable}
+            />
+          </main>
         </div>
       </MathJaxContext>
     </>

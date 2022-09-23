@@ -35,4 +35,26 @@ export const GlobalStyle = createGlobalStyle`
     background-color: rgb(221, 239, 245);
     border-right: solid 2px rgb(138, 173, 184);
   }
+
+  .main-content {
+    position: fixed;
+    left: 82px;
+    height: 100%;
+    width: 100%;
+    height: 100%;
+  }
+
+  .calculator-component {
+    float: left;
+    box-sizing: border-box;
+    width: 35%;
+    height: 100%;
+    border-right: solid 2px rgb(138, 173, 184);
+  }
+
+  .formulas-component {
+    float: left;
+    width: 65%;
+    height: 100%;
+  }
 `;

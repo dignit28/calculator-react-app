@@ -6,7 +6,7 @@ import { findVariableIndex } from "../../data/saveData";
 // Data
 import { saveData } from "../../data/saveData";
 // Styles
-import ChildVariablesWrapper from "./Formulas.styles";
+import { ChildVariablesWrapper, FormulasWrapper } from "./Formulas.styles";
 //Types
 import { CurrentSaveState, CurrentVariableState } from "../../App";
 
@@ -40,21 +40,29 @@ const Formulas: React.FC<FormulasProps> = (props) => {
     );
   });
 
-  return props.computedResult === "Invalid input" ? (
-    <p>Invalid input</p>
-  ) : (
-    <div>
-      <div>
-        <MathJax inline dynamic>
-          {`$
+  return (
+    <div className="formulas-component">
+      <FormulasWrapper>
+        {props.computedResult === "Invalid input" ? (
+          <p>Invalid input</p>
+        ) : (
+          <>
+            <div>
+              <MathJax inline dynamic>
+                {`$
       ${props.computedFormula === "" ? "" : props.currentVariable.name + "="}
       ${fixASCIIMathRendering(props.computedFormula)}
       ${props.computedFormula === "" ? "" : "="}
       ${fixASCIIMathRendering(props.computedResult)}
       $`}
-        </MathJax>
-      </div>
-      <ChildVariablesWrapper>{childVariableElements}</ChildVariablesWrapper>
+              </MathJax>
+            </div>
+            <ChildVariablesWrapper>
+              {childVariableElements}
+            </ChildVariablesWrapper>
+          </>
+        )}
+      </FormulasWrapper>
     </div>
   );
 };

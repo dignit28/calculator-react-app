@@ -161,16 +161,18 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
   ));
 
   return (
-    <CalculatorWrapper className="calculator">
-      <input
-        type="text"
-        className="calculator-input"
-        onChange={handleChange}
-        onClick={handleInputClick}
-        value={expression.displayedValue}
-      />
-      <ButtonsWrapper>{buttonElements}</ButtonsWrapper>
-    </CalculatorWrapper>
+    <div className="calculator-component">
+      <CalculatorWrapper className="calculator">
+        <input
+          type="text"
+          className="calculator-input"
+          onChange={handleChange}
+          onClick={handleInputClick}
+          value={expression.displayedValue}
+        />
+        <ButtonsWrapper>{buttonElements}</ButtonsWrapper>
+      </CalculatorWrapper>
+    </div>
   );
 };
 

@@ -90,7 +90,7 @@ const buttons: CalculatorButton[] = [
   },
   {
     id: uuidv4(),
-    text: "EVALUATE",
+    text: "=",
     value: "evaluate",
   },
 ];
