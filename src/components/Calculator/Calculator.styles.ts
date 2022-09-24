@@ -31,7 +31,7 @@ export const ButtonsWrapper = styled.div`
   width: 100%;
 
   button {
-    min-height: 6vh;
+    min-height: 2.3em;
     border: solid 1px rgb(138, 173, 184);
     background-color: rgb(173, 216, 230);
     font-size: 18px;
