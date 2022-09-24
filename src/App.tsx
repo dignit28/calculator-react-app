@@ -8,6 +8,8 @@ import { GlobalStyle } from "./App.styles";
 import { VariableData } from "./utility/interfaces";
 import { saveDataInit } from "./data/saveDataInit";
 
+require(".././public/icons/favicon.ico");
+
 const config = {
   loader: { load: ["input/asciimath"] },
   asciimath: {
