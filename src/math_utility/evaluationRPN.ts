@@ -114,50 +114,57 @@ function convertToRPN(stringToProcess: string) {
 export function calculateRPN(expression: string) {
   let expressionArray: (string | number)[] = convertToRPN(expression);
   let calculationStack: (number | string)[] = [];
-  expressionArray.forEach((token) => {
-    if (typeof token === "number") {
-      calculationStack.push(token);
-    } else if (token === "-u") {
-      let rhs = calculationStack.pop()!;
-      // @ts-ignore rhs will always be a number
-      calculationStack.push(rhs * -1);
-    } else {
-      let rhs = calculationStack.pop()!;
-      let lhs = calculationStack.pop()!;
-      let result;
-      switch (token) {
-        case "+":
-          // @ts-ignore rhs, lhs will always be a number
-          result = lhs + rhs;
-          break;
-        case "-":
-          // @ts-ignore rhs, lhs will always be a number
-          result = lhs - rhs;
-          break;
-        case "*":
-          // @ts-ignore rhs, lhs will always be a number
-          result = lhs * rhs;
-          break;
-        case "/":
-          // @ts-ignore rhs, lhs will always be a number
-          result = lhs / rhs;
-          break;
-        case "/e":
-          // This will create a string from two numbers.
-          // /e only exists after "^" operator hence the ts-ignore comments
-          // See handling of fractional exponents in convertToRPN() for the insight
-          result = `${lhs}/${rhs}`;
-          break;
-        case "^":
-          // @ts-ignore lhs will always be a number
-          result = negativeExponent(lhs, rhs);
-          break;
+  try {
+    expressionArray.forEach((token) => {
+      if (typeof token === "number") {
+        calculationStack.push(token);
+      } else if (token === "-u") {
+        let rhs = calculationStack.pop()!;
+        // @ts-ignore rhs will always be a number
+        calculationStack.push(rhs * -1);
+      } else {
+        let rhs = calculationStack.pop()!;
+        let lhs = calculationStack.pop()!;
+        let result;
+        switch (token) {
+          case "+":
+            // @ts-ignore rhs, lhs will always be a number
+            result = lhs + rhs;
+            break;
+          case "-":
+            // @ts-ignore rhs, lhs will always be a number
+            result = lhs - rhs;
+            break;
+          case "*":
+            // @ts-ignore rhs, lhs will always be a number
+            result = lhs * rhs;
+            break;
+          case "/":
+            if (rhs === 0) throw new Error("Division by zero");
+            // @ts-ignore rhs, lhs will always be a number
+            result = lhs / rhs;
+            break;
+          case "/e":
+            if (rhs === 0) throw new Error("Division by zero");
+            // This will create a string from two numbers.
+            // /e only exists after "^" operator hence the ts-ignore comments
+            // See handling of fractional exponents in convertToRPN() for the insight
+            result = `${lhs}/${rhs}`;
+            break;
+          case "^":
+            // @ts-ignore lhs will always be a number
+            result = negativeExponent(lhs, rhs);
+            if (Number.isNaN(result)) throw new Error("Division by zero");
+            break;
+        }
+        if (typeof result === "number" && !Number.isInteger(result)) {
+          result = computePreciseFloat(result);
+        }
+        calculationStack.push(result);
       }
-      if (typeof result === "number" && !Number.isInteger(result)) {
-        result = computePreciseFloat(result);
-      }
-      calculationStack.push(result);
-    }
-  });
-  return calculationStack[0];
+    });
+    return calculationStack[0];
+  } catch {
+    return NaN;
+  }
 }
