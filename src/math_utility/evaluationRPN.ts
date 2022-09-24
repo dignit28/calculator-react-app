@@ -1,6 +1,49 @@
 import { operators } from "../data/operators";
 import { negativeExponent } from "./negativeExponent";
 
+let precisionToLastSafe: { [key: number]: number } = {
+  "1": 562949953421311,
+  "2": 70368744177663,
+  "3": 8796093022207,
+  "4": 549755813887,
+  "5": 68719476735,
+  "6": 8589934591,
+  "7": 536870911,
+  "8": 67108863,
+  "9": 8388607,
+  "10": 524287,
+  "11": 65535,
+  "12": 8191,
+  "13": 511,
+  "14": 63,
+  "15": 7,
+};
+
+function computePreciseFloat(floatNum: number) {
+  const [integerPart, fractionalPart] = String(floatNum).split(".");
+  const nonIntegerLength: number = fractionalPart.length;
+  const positiveIntegerPart: number = Math.abs(Number(integerPart));
+  if (
+    nonIntegerLength > 15 ||
+    precisionToLastSafe[nonIntegerLength] < positiveIntegerPart
+  ) {
+    let maximumPrecision = 15;
+    while (maximumPrecision > 0) {
+      if ((precisionToLastSafe[maximumPrecision] || 0) > positiveIntegerPart)
+        break;
+      maximumPrecision--;
+    }
+    const EPSILON = Number("1e-" + maximumPrecision);
+    for (let precision = 0; precision < maximumPrecision; precision++) {
+      const currentPrecisionFloat = Number(floatNum.toFixed(precision));
+      if (Math.abs(floatNum - currentPrecisionFloat) < EPSILON) {
+        return currentPrecisionFloat;
+      }
+    }
+  }
+  return floatNum;
+}
+
 function convertToRPN(stringToProcess: string) {
   let tokens = stringToProcess.split(
     /(?<=\d)(?=[^0-9.])|(?<=[^0-9.])(?=\d)|(?<=\D)(?=\D)/g
@@ -81,34 +124,39 @@ export function calculateRPN(expression: string) {
     } else {
       let rhs = calculationStack.pop()!;
       let lhs = calculationStack.pop()!;
+      let result;
       switch (token) {
         case "+":
           // @ts-ignore rhs, lhs will always be a number
-          calculationStack.push(lhs + rhs);
+          result = lhs + rhs;
           break;
         case "-":
           // @ts-ignore rhs, lhs will always be a number
-          calculationStack.push(lhs - rhs);
+          result = lhs - rhs;
           break;
         case "*":
           // @ts-ignore rhs, lhs will always be a number
-          calculationStack.push(lhs * rhs);
+          result = lhs * rhs;
           break;
         case "/":
           // @ts-ignore rhs, lhs will always be a number
-          calculationStack.push(lhs / rhs);
+          result = lhs / rhs;
           break;
         case "/e":
           // This will create a string from two numbers.
           // /e only exists after "^" operator hence the ts-ignore comments
           // See handling of fractional exponents in convertToRPN() for the insight
-          calculationStack.push(`${lhs}/${rhs}`);
+          result = `${lhs}/${rhs}`;
           break;
         case "^":
           // @ts-ignore lhs will always be a number
-          calculationStack.push(negativeExponent(lhs, rhs));
+          result = negativeExponent(lhs, rhs);
           break;
       }
+      if (typeof result === "number" && !Number.isInteger(result)) {
+        result = computePreciseFloat(result);
+      }
+      calculationStack.push(result);
     }
   });
   return calculationStack[0];
