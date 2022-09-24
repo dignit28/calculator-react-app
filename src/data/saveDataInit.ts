@@ -36,7 +36,8 @@ export const saveDataInit: SaveDataState = [
     },
     {
       variableName: "y",
-      variableComment: "Float exponent, negative base.",
+      variableComment:
+        "Float exponent, negative base. 0.2 <=> to power of 1, to root of 5",
       variableChildren: [],
       inputData: {
         displayedValue: "-8^0.2",
@@ -49,7 +50,8 @@ export const saveDataInit: SaveDataState = [
     },
     {
       variableName: "z",
-      variableComment: "Fractional exponent, negative base.",
+      variableComment:
+        "Fractional exponent, negative base. 2/10 <=> to power of 2, to root of 10",
       variableChildren: [],
       inputData: {
         displayedValue: "-8^(2/10)",

@@ -106,7 +106,7 @@ const DeleteVariableDialogue: React.FC<DeleteVariableDialogueProps> = (
         <p>Do you want to delete variable {props.assignedVariable}?</p>
         {assignedVariableParents.length === 0 ? (
           <p className="modal-explanatory-text">
-            {"\u2713"} "{props.assignedVariable}" has no parents
+            {"\u2713"} No variables are dependent on "{props.assignedVariable}"
           </p>
         ) : (
           <>
