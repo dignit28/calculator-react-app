@@ -5,15 +5,17 @@ export const CalculatorWrapper = styled.div`
   padding: 0 20px;
   display: flex;
   flex-direction: column;
-  max-width: 500px;
 
-  input {
-    height: 25px;
+  textarea {
+    height: 40px;
+    width: 100%;
+    box-sizing: border-box;
     border: solid 1px rgb(138, 173, 184);
     background-color: rgb(173, 216, 230);
     font-size: 16px;
     color: rgb(58, 62, 65);
     font-weight: bold;
+    resize: none;
 
     :focus {
       outline-color: rgb(110, 138, 147);
@@ -26,6 +28,7 @@ export const ButtonsWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 5px;
+  width: 100%;
 
   button {
     min-height: 6vh;

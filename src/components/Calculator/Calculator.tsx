@@ -57,7 +57,7 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
     );
   }, [props.currentVariable, props.currentSave]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
     const newDisplayedValue: string = event.target.value.replace(
       /[^0-9a-z+\-*/^.)(]+/gi,
       ""
@@ -136,7 +136,7 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
         );
         break;
       case "delete": // Remove input
-        const inputField: HTMLInputElement =
+        const inputField: HTMLTextAreaElement =
           document.querySelector(".calculator-input")!;
         setExpression((prevExpression) => {
           if (prevExpression.arrayValue.indexOf("caret") === 0) {
@@ -177,9 +177,9 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
   };
 
   const handleInputClick = (
-    event: React.SyntheticEvent<HTMLInputElement>
+    event: React.SyntheticEvent<HTMLTextAreaElement>
   ): void => {
-    const target = event.target as HTMLInputElement;
+    const target = event.target as HTMLTextAreaElement;
     setExpression((prevExpression) => {
       if (typeof target.selectionStart === "number") {
         const newArrayValue: string[] = prevExpression.arrayValue.filter(
@@ -249,14 +249,13 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
   return (
     <div className="calculator-component">
       <CalculatorWrapper className="calculator">
-        <input
-          type="text"
+        <textarea
           className="calculator-input"
           onChange={handleChange}
           onClick={handleInputClick}
           value={expression.displayedValue}
           onKeyDown={onKeyDown}
-        />
+        ></textarea>
         <ButtonsWrapper>{buttonElements}</ButtonsWrapper>
       </CalculatorWrapper>
     </div>

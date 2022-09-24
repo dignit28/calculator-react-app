@@ -42,7 +42,6 @@ export const GlobalStyle = createGlobalStyle`
     color: rgb(58, 62, 65);
     font-weight: bold;
   }
-
   .main-content {
     position: fixed;
     left: 82px;
@@ -67,5 +66,28 @@ export const GlobalStyle = createGlobalStyle`
     float: left;
     width: 65%;
     height: 100%;
+  }
+
+  @media screen and (max-width: 768px) {
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      overflow-y: auto;
+    }
+
+    .calculator-component {
+      float: none;
+      width: 100%;
+      padding-right: 82px;
+      padding-bottom: 20px;
+      border: none;
+      border-bottom: solid 2px rgb(138, 173, 184);
+    }
+
+    .formulas-component {
+      float: none;
+      width: 100%;
+    }
   }
 `;
