@@ -57,7 +57,9 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
     );
   }, [props.currentVariable, props.currentSave]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ): void => {
     const newDisplayedValue: string = event.target.value.replace(
       /[^0-9a-z+\-*/^.)(]+/gi,
       ""
@@ -237,6 +239,36 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
           };
         });
         break;
+      case "Home":
+      case "PageUp": {
+        setExpression((prevExpression) => {
+          const newArrayValue: string[] = [...prevExpression.arrayValue];
+          const oldCaretIndex: number =
+            prevExpression.arrayValue.indexOf("caret");
+          newArrayValue.splice(oldCaretIndex, 1);
+          newArrayValue.unshift("caret");
+          return {
+            ...prevExpression,
+            arrayValue: newArrayValue,
+          };
+        });
+        break;
+      }
+      case "End":
+      case "PageDown": {
+        setExpression((prevExpression) => {
+          const newArrayValue: string[] = [...prevExpression.arrayValue];
+          const oldCaretIndex: number =
+            prevExpression.arrayValue.indexOf("caret");
+          newArrayValue.splice(oldCaretIndex, 1);
+          newArrayValue.push("caret");
+          return {
+            ...prevExpression,
+            arrayValue: newArrayValue,
+          };
+        });
+        break;
+      }
     }
   };
 
