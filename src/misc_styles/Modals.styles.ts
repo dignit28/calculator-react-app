@@ -35,6 +35,11 @@ export const ModalWrapper = styled.div<ModalWrapperProps>`
     text-overflow: ellipsis;
   }
 
+  .variable-name-error-text {
+    font-size: 13px;
+    color: rgb(198, 95, 123);
+  }
+
   input {
     border: solid 1px rgb(138, 173, 184);
     background-color: rgb(173, 216, 230);
@@ -46,6 +51,14 @@ export const ModalWrapper = styled.div<ModalWrapperProps>`
 
     :focus {
       outline-color: rgb(110, 138, 147);
+    }
+  }
+
+  .variable-input-error {
+    border: solid 2px rgb(198, 95, 123);
+
+    :focus {
+      outline-color: rgb(198, 95, 123);
     }
   }
 

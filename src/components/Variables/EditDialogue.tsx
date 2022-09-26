@@ -40,6 +40,12 @@ const EditForm: React.FC<EditFormProps> = (props) => {
           ].variableComment,
   });
 
+  const [variableNameError, setVariableNameError] = React.useState<String>("");
+
+  React.useEffect(() => {
+    setVariableNameError("");
+  }, [formData.variableName]);
+
   function handleChange(
     event: React.ChangeEvent<HTMLInputElement>,
     isVariableInput: boolean
@@ -102,6 +108,8 @@ const EditForm: React.FC<EditFormProps> = (props) => {
 
         closeFormCleanup(formData.variableName);
       }
+    } else {
+      setVariableNameError("Can't use this variable name");
     }
   };
 
@@ -194,6 +202,8 @@ const EditForm: React.FC<EditFormProps> = (props) => {
 
         closeFormCleanup(newVariableName);
       }
+    } else {
+      setVariableNameError("Can't use this variable name");
     }
   };
 
@@ -212,8 +222,12 @@ const EditForm: React.FC<EditFormProps> = (props) => {
         }}
       >
         <p>Variable Name</p>
+        {variableNameError && (
+          <p className="variable-name-error-text">! {variableNameError}</p>
+        )}
         <input
           type="text"
+          className={variableNameError !== "" ? "variable-input-error" : ""}
           autoComplete="off"
           name="variableName"
           onChange={(e) => handleChange(e, true)}
