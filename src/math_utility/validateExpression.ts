@@ -16,7 +16,7 @@ export function validateVariables(
     expression: string
   ) => void,
   saveData: SaveDataState
-): boolean {
+): string {
   const arrayedExpression: string[] = expression.split("");
   const variablesInExpression = Array.from(
     new Set(
@@ -40,16 +40,7 @@ export function validateVariables(
 
   if (HAS_ITSELF_IN_EXPRESSION) {
     cancelChildrenChange();
-    return false;
-  }
-
-  const HAS_BANNED_VARIABLES = variablesInExpression.some((variable) => {
-    return BANNED_VARIABLE_NAMES.includes(variable);
-  });
-
-  if (HAS_BANNED_VARIABLES) {
-    cancelChildrenChange();
-    return false;
+    return "Recursion error. Variable cannot have itself in expression.";
   }
 
   const currentSaveVariables = saveData[save].map((variableData) => {
@@ -62,7 +53,7 @@ export function validateVariables(
 
   if (HAS_UNKNOWN_VARIABLES) {
     cancelChildrenChange();
-    return false;
+    return "Matching error. Some variables in expression don't exist.";
   }
 
   function checkChildrenVariables(
@@ -93,13 +84,13 @@ export function validateVariables(
 
   if (!NO_VARIABLE_RECURSION) {
     cancelChildrenChange();
-    return false;
+    return "Recursion error. Some variable in expression has current variable in its expression.";
   }
 
-  return true;
+  return "";
 }
 
-export function validateExpression(expression: string): boolean {
+export function validateExpression(expression: string): string {
   const arrayedExpression: string[] = expression.split("");
   let openingParenthesis: number = 0;
 
@@ -251,11 +242,16 @@ export function validateExpression(expression: string): boolean {
       prevToken.tokenType === ExpressionTokenType.DECIMAL_POINT
     ) {
       throw new Error(
-        "expression must end with a right parenthesis, variable or a number"
+        "Expression must end with a right parenthesis, variable or a number"
       );
     }
-  } catch (errorMessage) {
-    return false;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.message);
+      return error.message;
+    }
+    console.log("Unknown error");
+    return "Unknown error";
   }
-  return true;
+  return "";
 }

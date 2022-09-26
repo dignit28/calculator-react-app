@@ -77,7 +77,7 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
       case "evaluate": // Process evaluation
         const expressionToCalculate = expression.displayedValue;
         if (
-          validateExpression(expressionToCalculate) &&
+          validateExpression(expressionToCalculate) === "" &&
           validateVariables(
             props.currentSave.index,
             props.currentVariable.name,
@@ -85,7 +85,7 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
             props.findVariableIndex,
             props.updateVariableChildren,
             props.saveData
-          )
+          ) === ""
         ) {
           const resultingFormula = evaluateVariable(
             props.currentSave.index,
