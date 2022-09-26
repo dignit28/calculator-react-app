@@ -31,7 +31,7 @@ export const saveDataInit: SaveDataState = [
       },
       computedData: {
         computedFormula: "24*(y*z)/5^-2/8/3",
-        computedResult: "-57.43491774985174",
+        computedResult: "-57.434917749851756",
       },
     },
     {
