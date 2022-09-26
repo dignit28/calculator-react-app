@@ -111,7 +111,7 @@ function convertToRPN(stringToProcess: string) {
   return tokensInRPN;
 }
 
-export function calculateRPN(expression: string) {
+export function calculateRPN(expression: string): [number, string] {
   let expressionArray: (string | number)[] = convertToRPN(expression);
   let calculationStack: (number | string)[] = [];
   try {
@@ -152,9 +152,10 @@ export function calculateRPN(expression: string) {
             result = `${lhs}/${rhs}`;
             break;
           case "^":
+            let errorMessage;
             // @ts-ignore lhs will always be a number
-            result = negativeExponent(lhs, rhs);
-            if (Number.isNaN(result)) throw new Error("Division by zero");
+            [result, errorMessage] = negativeExponent(lhs, rhs);
+            if (Number.isNaN(result)) throw new Error(errorMessage);
             break;
         }
         if (typeof result === "number" && !Number.isInteger(result)) {
@@ -163,8 +164,12 @@ export function calculateRPN(expression: string) {
         calculationStack.push(result);
       }
     });
-    return calculationStack[0];
-  } catch {
-    return NaN;
+    // @ts-ignore if no error was thrown the last element will always be a number
+    return [calculationStack[0], ""];
+  } catch (error) {
+    if (error instanceof Error) {
+      return [NaN, error.message];
+    }
+    return [NaN, "Unknown error"];
   }
 }

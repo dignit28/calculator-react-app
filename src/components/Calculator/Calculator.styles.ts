@@ -6,6 +6,10 @@ export const CalculatorWrapper = styled.div`
   display: flex;
   flex-direction: column;
 
+  .error-text {
+    color: rgb(198, 95, 123);
+  }
+
   textarea {
     height: 40px;
     width: 100%;
@@ -19,6 +23,14 @@ export const CalculatorWrapper = styled.div`
 
     :focus {
       outline-color: rgb(110, 138, 147);
+    }
+  }
+
+  .input-error {
+    border: solid 2px rgb(198, 95, 123);
+
+    :focus {
+      outline-color: rgb(198, 95, 123);
     }
   }
 `;

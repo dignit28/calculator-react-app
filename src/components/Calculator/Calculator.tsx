@@ -57,6 +57,12 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
     );
   }, [props.currentVariable, props.currentSave]);
 
+  const [error, setError] = React.useState<String>("");
+
+  React.useEffect(() => {
+    setError("");
+  }, [props.currentSave, props.currentVariable, expression.displayedValue]);
+
   const handleChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ): void => {
@@ -76,18 +82,18 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
     switch (value) {
       case "evaluate": // Process evaluation
         const expressionToCalculate = expression.displayedValue;
-        if (
-          validateExpression(expressionToCalculate) === "" &&
-          validateVariables(
-            props.currentSave.index,
-            props.currentVariable.name,
-            expressionToCalculate,
-            props.findVariableIndex,
-            props.updateVariableChildren,
-            props.saveData
-          ) === ""
-        ) {
-          const resultingFormula = evaluateVariable(
+        const expressionError = validateExpression(expressionToCalculate);
+        const variablesError = validateVariables(
+          props.currentSave.index,
+          props.currentVariable.name,
+          expressionToCalculate,
+          props.findVariableIndex,
+          props.updateVariableChildren,
+          props.saveData
+        );
+
+        if (expressionError === "" && variablesError === "") {
+          const [resultingFormula, errorMessage] = evaluateVariable(
             props.currentSave.index,
             props.currentVariable.name,
             expressionToCalculate,
@@ -118,6 +124,7 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
             );
           }
 
+          setError(errorMessage);
           props.setComputedFormula(resultingFormula);
         } else {
           const invalidFormulaData = {
@@ -129,6 +136,8 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
             props.currentVariable.name,
             invalidFormulaData
           );
+
+          setError(expressionError || variablesError);
           props.setComputedFormula(invalidFormulaData);
         }
         props.updateInputData(
@@ -281,8 +290,9 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
   return (
     <div className="calculator-component">
       <CalculatorWrapper className="calculator">
+        {error && <p className="error-text">!!! {error}</p>}
         <textarea
-          className="calculator-input"
+          className={"calculator-input" + (error !== "" ? " input-error" : "")}
           onChange={handleChange}
           onClick={handleInputClick}
           value={expression.displayedValue}

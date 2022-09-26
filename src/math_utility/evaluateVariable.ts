@@ -13,14 +13,16 @@ export default function evaluateVariable(
   ) => void,
   findVariableIndex: (save: number, variable: string) => number,
   saveData: SaveDataState
-) {
+): [ComputedFormulaState, string] {
   const expressionToCalculateOnlyValues = switchVariablesToValues(
     save,
     expressionToCalculate,
     findVariableIndex,
     saveData
   );
-  const finalResult = calculateRPN(expressionToCalculateOnlyValues);
+  const [finalResult, errorMessage] = calculateRPN(
+    expressionToCalculateOnlyValues
+  );
   const resultingFormula = {
     computedFormula: expressionToCalculate,
     computedResult: Number.isNaN(finalResult)
@@ -32,5 +34,5 @@ export default function evaluateVariable(
   updateFormulaData(save, currentVariable, resultingFormula);
 
   // Storing this value is not important unless there is a need to update current state
-  return resultingFormula;
+  return [resultingFormula, errorMessage];
 }

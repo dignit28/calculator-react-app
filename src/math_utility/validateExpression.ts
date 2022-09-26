@@ -247,10 +247,8 @@ export function validateExpression(expression: string): string {
     }
   } catch (error) {
     if (error instanceof Error) {
-      console.log(error.message);
       return error.message;
     }
-    console.log("Unknown error");
     return "Unknown error";
   }
   return "";

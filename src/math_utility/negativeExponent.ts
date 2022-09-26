@@ -1,22 +1,27 @@
 interface Pow {
   exponent: number | null;
   sign: string;
+  errorMessage: string;
 }
 
-export function negativeExponent(lhs: number, rhs: number | string) {
+export function negativeExponent(
+  lhs: number,
+  rhs: number | string
+): [number, string] {
   if (lhs >= 0) {
     if (typeof rhs === "number") {
-      return Math.pow(lhs, rhs);
+      return [Math.pow(lhs, rhs), ""];
     } //else if (typeof rhs === 'string')
     // @ts-ignore rhs will always have exactly one instance of "/"
     let [exponent, root]: [number | string, number | string] = rhs.split("/");
     exponent = +exponent;
     root = +root;
-    return Math.pow(Math.pow(lhs, exponent), 1 / root);
+    return [Math.pow(Math.pow(lhs, exponent), 1 / root), ""];
   } //else if (lhs < 0)
   let pow: Pow = {
     exponent: null,
     sign: "impossible",
+    errorMessage: "",
   };
   if (typeof rhs === "number") {
     pow = checkPossibilities(`${rhs}/1`);
@@ -27,11 +32,11 @@ export function negativeExponent(lhs: number, rhs: number | string) {
 
   rhs = pow.exponent!;
   if (pow.sign === "impossible") {
-    return NaN;
+    return [NaN, pow.errorMessage];
   } else if (pow.sign === "positive") {
-    return Math.pow(-1 * lhs, rhs);
+    return [Math.pow(-1 * lhs, rhs), ""];
   } else {
-    return -1 * Math.pow(-1 * lhs, rhs);
+    return [-1 * Math.pow(-1 * lhs, rhs), ""];
   }
 }
 
@@ -114,36 +119,51 @@ function checkPossibilities(fractionalExponent: string) {
   let result: Pow = {
     exponent: null,
     sign: "impossible",
+    errorMessage: "",
   };
 
   function computeSignWhenBothIntegers(
     localExponent: number,
     localRoot: number
-  ) {
+  ): [string, string] {
     if (localExponent % 2 === 0) {
       //IF exponent is even integer AND root is even integer
       //OR exponent is even integer AND root is odd integer
-      return "positive";
+      return ["positive", ""];
     } else if (Math.abs(localRoot) % 2 === 1) {
       //IF exponent is odd integer AND root is odd integer
-      return "negative";
+      return ["negative", ""];
     } else {
       //IF exponent is odd integer AND root is even integer
-      return "impossible";
+      return ["impossible", "Cannot take even root from negative number"];
     }
   }
 
   if (Number.isInteger(exponent) && Number.isInteger(root)) {
-    result.sign = computeSignWhenBothIntegers(exponent, root);
+    [result.sign, result.errorMessage] = computeSignWhenBothIntegers(
+      exponent,
+      root
+    );
   } else {
     let exponentDividedByRoot = exponent / root;
     if (Number.isInteger(exponentDividedByRoot)) {
       exponent = exponentDividedByRoot;
       root = 1;
-      result.sign = computeSignWhenBothIntegers(exponent, root);
+      [result.sign, result.errorMessage] = computeSignWhenBothIntegers(
+        exponent,
+        root
+      );
     } else {
       [exponent, root] = rationalizeFloat(exponentDividedByRoot);
-      result.sign = computeSignWhenBothIntegers(exponent, root);
+      if (Number.isNaN(exponent) || Number.isNaN(root)) {
+        result.sign = "impossible";
+        result.errorMessage = "Can't rationalize float exponent";
+      } else {
+        [result.sign, result.errorMessage] = computeSignWhenBothIntegers(
+          exponent,
+          root
+        );
+      }
     }
   }
   result.exponent = exponent / root;
