@@ -37,7 +37,7 @@ const Formulas: React.FC<FormulasProps> = (props) => {
       ].variableComment;
     return (
       <li key={uuidv4()}>
-        {childVariable} - {variableComment}
+        {childVariable} - {variableComment || "Variable " + childVariable}
       </li>
     );
   });
