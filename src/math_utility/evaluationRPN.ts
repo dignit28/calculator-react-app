@@ -46,7 +46,7 @@ function computePreciseFloat(floatNum: number) {
 
 function convertToRPN(stringToProcess: string) {
   let tokens = stringToProcess.split(
-    /(?<=\d)(?=[^0-9.])|(?<=[^0-9.])(?=\d)|(?<=\D)(?=\D)/g
+    /(?<=\d)(?=[^0-9.])|(?<=[^0-9.])(?=\d)|(?<=[a-z]+)(?=[^a-z])|(?<=[^a-z0-9])(?=[^0-9])/gi
   );
   tokens = tokens.map((token: string, tokenIndex: number) => {
     if (
@@ -112,6 +112,7 @@ function convertToRPN(stringToProcess: string) {
 }
 
 export function calculateRPN(expression: string): [number, string] {
+  if (expression.includes("Invalid input")) return [NaN, ""];
   let expressionArray: (string | number)[] = convertToRPN(expression);
   let calculationStack: (number | string)[] = [];
   try {
@@ -158,7 +159,11 @@ export function calculateRPN(expression: string): [number, string] {
             if (Number.isNaN(result)) throw new Error(errorMessage);
             break;
         }
-        if (typeof result === "number" && !Number.isInteger(result)) {
+        if (
+          typeof result === "number" &&
+          !Number.isInteger(result) &&
+          Number.isFinite(result)
+        ) {
           result = computePreciseFloat(result);
         }
         calculationStack.push(result);

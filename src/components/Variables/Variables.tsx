@@ -53,7 +53,7 @@ const Variables: React.FC<VariablesProps> = (props) => {
 
   React.useEffect(() => {
     setVariables(props.saveData[props.currentSave.index]);
-  }, [props.currentSave]);
+  }, [props.currentSave, props.saveData]);
 
   const openEditForm = (event: React.MouseEvent) => {
     setEditIsShown(true);

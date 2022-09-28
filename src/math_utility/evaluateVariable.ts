@@ -1,6 +1,6 @@
 import switchVariablesToValues from "../math_utility/switchVariablesToValues";
 import { calculateRPN } from "../math_utility/evaluationRPN";
-import { ComputedFormulaState, SaveDataState } from "../App";
+import { ComputedFormulaState } from "../App";
 
 export default function evaluateVariable(
   save: number,
@@ -11,14 +11,12 @@ export default function evaluateVariable(
     variable: string,
     newComputedData: ComputedFormulaState
   ) => void,
-  findVariableIndex: (save: number, variable: string) => number,
-  saveData: SaveDataState
+  setLocalVariableValue: (variable: string, value: string) => void,
+  getLocalVariableValue: (variable: string) => string
 ): [ComputedFormulaState, string] {
   const expressionToCalculateOnlyValues = switchVariablesToValues(
-    save,
     expressionToCalculate,
-    findVariableIndex,
-    saveData
+    getLocalVariableValue
   );
   const [finalResult, errorMessage] = calculateRPN(
     expressionToCalculateOnlyValues
@@ -29,8 +27,8 @@ export default function evaluateVariable(
       ? "Invalid input"
       : finalResult.toString(),
   };
-
   // After evaluation finished, update data
+  setLocalVariableValue(currentVariable, resultingFormula.computedResult);
   updateFormulaData(save, currentVariable, resultingFormula);
 
   // Storing this value is not important unless there is a need to update current state

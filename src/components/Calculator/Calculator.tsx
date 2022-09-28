@@ -55,7 +55,7 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
       props.saveData[props.currentSave.index][props.currentVariable.index]
         .inputData
     );
-  }, [props.currentVariable, props.currentSave]);
+  }, [props.currentVariable, props.currentSave, props.saveData]);
 
   const [error, setError] = React.useState<String>("");
 
@@ -93,18 +93,66 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
         );
 
         if (expressionError === "" && variablesError === "") {
+          let localVariableValues: { [key: string]: string } = {};
+
+          const setLocalVariableValue = (
+            variable: string,
+            value: string
+          ): void => {
+            localVariableValues[variable] = value;
+          };
+
+          const getLocalVariableValue = (variable: string): string => {
+            return localVariableValues[variable];
+          };
+
+          const evaluationArray = props.getParentVariables(
+            props.currentSave.index,
+            props.currentVariable.name
+          );
+
+          evaluationArray.forEach((variable) => {
+            props.saveData[props.currentSave.index][
+              props.findVariableIndex(props.currentSave.index, variable)
+            ].variableChildren.forEach((childVariable) => {
+              const value =
+                props.saveData[props.currentSave.index][
+                  props.findVariableIndex(
+                    props.currentSave.index,
+                    childVariable
+                  )
+                ].computedData.computedResult;
+              setLocalVariableValue(childVariable, value);
+            });
+            const value =
+              props.saveData[props.currentSave.index][
+                props.findVariableIndex(props.currentSave.index, variable)
+              ].computedData.computedResult;
+            setLocalVariableValue(variable, value);
+          });
+
+          props.saveData[props.currentSave.index][
+            props.currentVariable.index
+          ].variableChildren.forEach((variable) => {
+            const value =
+              props.saveData[props.currentSave.index][
+                props.findVariableIndex(props.currentSave.index, variable)
+              ].computedData.computedResult;
+            setLocalVariableValue(variable, value);
+          });
+
           const [resultingFormula, errorMessage] = evaluateVariable(
             props.currentSave.index,
             props.currentVariable.name,
             expressionToCalculate,
             props.updateFormulaData,
-            props.findVariableIndex,
-            props.saveData
+            setLocalVariableValue,
+            getLocalVariableValue
           );
 
-          const evaluationArray = props.getParentVariables(
-            props.currentSave.index,
-            props.currentVariable.name
+          setLocalVariableValue(
+            props.currentVariable.name,
+            resultingFormula.computedResult
           );
 
           while (evaluationArray.length !== 0) {
@@ -119,8 +167,8 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
                 )
               ].computedData.computedFormula,
               props.updateFormulaData,
-              props.findVariableIndex,
-              props.saveData
+              setLocalVariableValue,
+              getLocalVariableValue
             );
           }
 
@@ -147,8 +195,6 @@ const Calculator: React.FC<CalculatorProps> = (props) => {
         );
         break;
       case "delete": // Remove input
-        const inputField: HTMLTextAreaElement =
-          document.querySelector(".calculator-input")!;
         setExpression((prevExpression) => {
           if (prevExpression.arrayValue.indexOf("caret") === 0) {
             return prevExpression;

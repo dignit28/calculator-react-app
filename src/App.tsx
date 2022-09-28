@@ -171,7 +171,7 @@ function App() {
     setComputedFormula(
       saveData[currentSave.index][currentVariable.index].computedData
     );
-  }, [currentVariable, currentSave]);
+  }, [currentVariable, currentSave, saveData]);
 
   return (
     <>
