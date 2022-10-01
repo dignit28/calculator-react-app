@@ -8,7 +8,6 @@ export const ChildVariablesWrapper = styled.ul`
   padding-right: 20px;
   font-family: "Times New Roman", Times, serif;
   color: #000;
-  font-style: italic;
   font-weight: bold;
   overflow-y: auto;
 
@@ -28,7 +27,6 @@ export const FormulasWrapper = styled.div`
 
   p {
     padding: 20px;
-    font-weight: 900;
     font-family: Arial, Helvetica, sans-serif;
     color: #000;
     font-size: 14px;

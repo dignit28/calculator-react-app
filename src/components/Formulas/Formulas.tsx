@@ -31,13 +31,23 @@ const Formulas: React.FC<FormulasProps> = (props) => {
   const childVariableElements = props.saveData[props.currentSave.index][
     props.currentVariable.index
   ].variableChildren.map((childVariable) => {
-    const variableComment =
+    const variableData =
       props.saveData[props.currentSave.index][
         props.findVariableIndex(props.currentSave.index, childVariable)
-      ].variableComment;
+      ];
+    const variableComment = variableData.variableComment;
+    const variableValue = variableData.computedData.computedResult;
     return (
       <li key={uuidv4()}>
-        {childVariable} - {variableComment || "Variable " + childVariable}
+        <MathJax inline dynamic>
+          <span>
+            {`$${childVariable}
+            ${"="}
+            ${variableValue}$`}
+          </span>
+          {" - "}
+          {variableComment || "Variable " + childVariable}
+        </MathJax>
       </li>
     );
   });
