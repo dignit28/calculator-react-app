@@ -14,11 +14,8 @@ type SavesProps = {
   saveData: SaveDataState;
   setSaveData: React.Dispatch<React.SetStateAction<SaveDataState>>;
   currentSave: CurrentSaveState;
-  setCurrentSave: React.Dispatch<React.SetStateAction<CurrentSaveState>>;
+  setCurrentSave: (newSave: CurrentSaveState) => void;
   currentVariable: CurrentVariableState;
-  setCurrentVariable: React.Dispatch<
-    React.SetStateAction<CurrentVariableState>
-  >;
   updateInputData: (
     save: number,
     variable: string,
@@ -60,10 +57,6 @@ const Saves: React.FC<SavesProps> = (props) => {
       expression
     );
     props.setCurrentSave({ index: save });
-    props.setCurrentVariable({
-      name: props.saveData[props.currentSave.index][0].variableName,
-      index: 0,
-    });
   };
 
   const openDeleteSaveDialogue = (event: React.MouseEvent) => {
@@ -136,7 +129,6 @@ const Saves: React.FC<SavesProps> = (props) => {
           assignedSave={assignedFormSave}
           position={cursorClickPosition}
           setCurrentSave={props.setCurrentSave}
-          setCurrentVariable={props.setCurrentVariable}
           closeDeleteSaveDialogue={closeDeleteSaveDialogue}
         />
       )}

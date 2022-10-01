@@ -2,7 +2,6 @@ import React from "react";
 // Types
 import {
   CurrentSaveState,
-  CurrentVariableState,
   SaveDataState,
 } from "../../App";
 // Styles
@@ -14,10 +13,7 @@ type DeleteSaveDialogueProps = {
   assignedSave: number;
   position: [number, number];
   closeDeleteSaveDialogue: () => void;
-  setCurrentSave: React.Dispatch<React.SetStateAction<CurrentSaveState>>;
-  setCurrentVariable: React.Dispatch<
-    React.SetStateAction<CurrentVariableState>
-  >;
+  setCurrentSave: (newSave: CurrentSaveState) => void;
 };
 
 const DeleteSaveDialogue: React.FC<DeleteSaveDialogueProps> = (props) => {
@@ -50,10 +46,6 @@ const DeleteSaveDialogue: React.FC<DeleteSaveDialogueProps> = (props) => {
       return newSaveData;
     });
     props.setCurrentSave({ index: 0 });
-    props.setCurrentVariable({
-      name: props.saveData[0][0].variableName,
-      index: 0,
-    });
     props.closeDeleteSaveDialogue();
   };
 

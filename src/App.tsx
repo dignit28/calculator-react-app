@@ -154,9 +154,17 @@ function App() {
     return parentsArray;
   };
 
-  const [currentSave, setCurrentSave] = React.useState<CurrentSaveState>({
+  const [currentSave, _setCurrentSave] = React.useState<CurrentSaveState>({
     index: 0,
   });
+
+  const setCurrentSave = (newSave: CurrentSaveState): void => {
+    _setCurrentSave(newSave);
+    setCurrentVariable({
+      name: saveData[newSave.index][0].variableName,
+      index: 0,
+    });
+  };
 
   const [currentVariable, setCurrentVariable] =
     React.useState<CurrentVariableState>({
@@ -184,7 +192,6 @@ function App() {
             currentSave={currentSave}
             setCurrentSave={setCurrentSave}
             currentVariable={currentVariable}
-            setCurrentVariable={setCurrentVariable}
             updateInputData={updateInputData}
           />
           <Variables

@@ -52,6 +52,8 @@ const Formulas: React.FC<FormulasProps> = (props) => {
     );
   });
 
+  console.log(props.currentVariable.name);
+
   return (
     <div className="formulas-component">
       <FormulasWrapper>
